@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, Paperclip, CheckCheck, Crown, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { X, Send, CheckCheck } from 'lucide-react';
 import { useMehndiAuth } from '@/context/MehndiAuthContext';
 import { bookingStorage } from '@/services/bookingStorage';
-import { ChatConversation } from '@/types/mehndi';
 
 interface ChatModalProps {
   isOpen: boolean;
@@ -38,7 +37,7 @@ export const ChatModal: React.FC<ChatModalProps> = ({
             senderName: artistName,
             senderAvatar: artistAvatar,
             senderRole: 'artist',
-            text: `Hello! I am ${artistName}. Please share your event date, venue location, and any custom design requests!`,
+            text: `Welcome! I am ${artistName}. Please share your ceremony date, venue location, and any custom design requests.`,
             timestamp: 'Just now',
             isRead: true,
           }
@@ -76,7 +75,6 @@ export const ChatModal: React.FC<ChatModalProps> = ({
     bookingStorage.sendMessage('chat-1', inputText, senderRole, senderName, senderAvatar);
     setInputText('');
 
-    // Simulate realistic artist reply after 1.5s
     if (senderRole === 'customer') {
       setTimeout(() => {
         const replyMsg = {
@@ -85,54 +83,43 @@ export const ChatModal: React.FC<ChatModalProps> = ({
           senderName: artistName,
           senderAvatar: artistAvatar,
           senderRole: 'artist' as const,
-          text: `Thank you for your message! I would love to create this bespoke bridal henna for you. Would you like to review our available dates or proceed with the deposit?`,
+          text: `Thank you for sharing your details! I would be delighted to work with you on your bridal henna. Would you like to review dates or reserve your slot?`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           isRead: true,
         };
         setMessages(prev => [...prev, replyMsg]);
-      }, 1500);
+      }, 1200);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg bg-[#FDFBF7] dark:bg-[#07100D] border border-[#C59B27]/40 rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[600px] max-h-[85vh]">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+      <div className="relative w-full max-w-lg bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[560px] max-h-[85vh]">
         
         {/* Header */}
-        <div className="p-4 border-b border-[#EFE7DA] dark:border-[#1F362E] bg-white dark:bg-[#0E1A16] flex items-center justify-between">
+        <div className="p-4 border-b border-[#E8E2D9] dark:border-[#2A2724] bg-white dark:bg-[#1C1A18] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <img
-                src={artistAvatar}
-                alt={artistName}
-                className="w-10 h-10 rounded-full object-cover border border-[#C59B27]"
-              />
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
-            </div>
+            <img
+              src={artistAvatar}
+              alt={artistName}
+              className="w-10 h-10 rounded-full object-cover border border-[#E8E2D9]"
+            />
             <div>
-              <p className="text-sm font-bold text-[#1A2421] dark:text-[#F8F5EE] flex items-center gap-1.5">
-                <span>{artistName}</span>
-                <Crown className="w-3.5 h-3.5 text-[#C59B27]" />
-              </p>
-              <p className="text-[11px] text-[#5C6763] dark:text-[#B2C2BC]">
-                Active now • Typical response: 15 mins
-              </p>
+              <p className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{artistName}</p>
+              <p className="text-[10px] text-[#385648] dark:text-[#5E8C75] font-semibold">Verified Master Artisan</p>
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-full text-gray-400 hover:text-gray-700 dark:hover:text-white"
-          >
+          <button onClick={onClose} className="p-1.5 text-[#6B665F] hover:text-[#1C1A18]">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Message Thread */}
-        <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#FDFBF7] dark:bg-[#07100D]">
+        {/* Thread */}
+        <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#FAF8F5] dark:bg-[#141312]">
           <div className="text-center my-2">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#9A7516] bg-[#FEF9EE] dark:bg-[#282010] px-3 py-1 rounded-full border border-[#C59B27]/30">
-              🔒 End-to-End Verified Bridal Inquiries
+            <span className="text-[10px] uppercase font-semibold tracking-wider text-[#6B665F] bg-[#F4EFEB] dark:bg-[#1C1A18] px-3 py-1 rounded-full border border-[#E8E2D9]">
+              Verified Bridal Inquiry Channel
             </span>
           </div>
 
@@ -147,20 +134,20 @@ export const ChatModal: React.FC<ChatModalProps> = ({
                   <img
                     src={msg.senderAvatar}
                     alt={msg.senderName}
-                    className="w-6 h-6 rounded-full object-cover mb-1 border border-[#C59B27]/30"
+                    className="w-6 h-6 rounded-full object-cover mb-1 border border-[#E8E2D9]"
                   />
                 )}
                 <div
                   className={`max-w-[75%] p-3.5 rounded-2xl text-xs leading-relaxed ${
                     isMe
-                      ? 'bg-[#064E3B] text-white rounded-br-none shadow-sm'
-                      : 'bg-white dark:bg-[#0E1A16] text-[#1A2421] dark:text-[#F8F5EE] border border-[#EFE7DA] dark:border-[#1F362E] rounded-bl-none shadow-xs'
+                      ? 'bg-[#1C1A18] text-white rounded-br-none'
+                      : 'bg-white dark:bg-[#1C1A18] text-[#1C1A18] dark:text-[#F7F5F0] border border-[#E8E2D9] dark:border-[#2A2724] rounded-bl-none'
                   }`}
                 >
                   <p>{msg.text}</p>
-                  <div className={`text-[9px] mt-1 flex items-center justify-end gap-1 ${isMe ? 'text-emerald-200' : 'text-gray-400'}`}>
+                  <div className={`text-[9px] mt-1 flex items-center justify-end gap-1 ${isMe ? 'text-gray-300' : 'text-gray-400'}`}>
                     <span>{msg.timestamp}</span>
-                    {isMe && <CheckCheck className="w-3 h-3 text-emerald-300" />}
+                    {isMe && <CheckCheck className="w-3 h-3 text-white" />}
                   </div>
                 </div>
               </div>
@@ -169,28 +156,21 @@ export const ChatModal: React.FC<ChatModalProps> = ({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar */}
-        <form onSubmit={handleSendMessage} className="p-3 border-t border-[#EFE7DA] dark:border-[#1F362E] bg-white dark:bg-[#0E1A16] flex items-center gap-2">
-          <button
-            type="button"
-            className="p-2 rounded-full text-gray-400 hover:text-[#C59B27] hover:bg-black/5"
-            title="Attach design inspiration"
-          >
-            <ImageIcon className="w-5 h-5" />
-          </button>
+        {/* Input */}
+        <form onSubmit={handleSendMessage} className="p-3 border-t border-[#E8E2D9] dark:border-[#2A2724] bg-white dark:bg-[#1C1A18] flex items-center gap-2">
           <input
             type="text"
-            placeholder="Type your message or ask about dates..."
+            placeholder="Type your message..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            className="flex-1 px-4 py-2.5 rounded-full bg-[#F8F4EB] dark:bg-[#07100D] border border-transparent focus:border-[#C59B27] focus:outline-none text-xs text-[#1A2421] dark:text-[#F8F5EE]"
+            className="flex-1 px-4 py-2 rounded-full bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] text-xs text-[#1C1A18] dark:text-[#F7F5F0] focus:outline-none focus:border-[#1C1A18]"
           />
           <button
             type="submit"
             disabled={!inputText.trim()}
-            className="p-2.5 rounded-full bg-[#064E3B] text-white hover:bg-[#022C22] disabled:opacity-40 transition-all"
+            className="btn-primary !p-2.5 !rounded-full shrink-0 disabled:opacity-40"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5" />
           </button>
         </form>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Sparkles, Heart, ZoomIn, Eye } from 'lucide-react';
-import { PortfolioItem, MehndiCategory } from '@/types/mehndi';
+import { ZoomIn, Heart } from 'lucide-react';
+import { PortfolioItem } from '@/types/mehndi';
 
 interface PortfolioMasonryProps {
   items: PortfolioItem[];
@@ -19,7 +19,7 @@ export const PortfolioMasonry: React.FC<PortfolioMasonryProps> = ({ items, onOpe
   return (
     <div className="space-y-8">
       
-      {/* Filter Tabs */}
+      {/* Category Filter Pills */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {categories.map((cat) => {
           const isActive = selectedCategory === cat;
@@ -27,10 +27,10 @@ export const PortfolioMasonry: React.FC<PortfolioMasonryProps> = ({ items, onOpe
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider whitespace-nowrap transition-colors ${
                 isActive
-                  ? 'bg-[#064E3B] text-white shadow-sm'
-                  : 'bg-white dark:bg-[#0E1A16] text-[#5C6763] dark:text-[#B2C2BC] border border-[#EFE7DA] dark:border-[#1F362E] hover:border-[#C59B27]'
+                  ? 'bg-[#1C1A18] text-white dark:bg-[#F7F5F0] dark:text-[#141312]'
+                  : 'bg-white dark:bg-[#1C1A18] text-[#6B665F] dark:text-[#A8A298] border border-[#E8E2D9] dark:border-[#2A2724] hover:border-[#1C1A18]'
               }`}
             >
               {cat}
@@ -40,56 +40,53 @@ export const PortfolioMasonry: React.FC<PortfolioMasonryProps> = ({ items, onOpe
       </div>
 
       {/* Masonry Image Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {filteredItems.map((item) => (
           <div
             key={item.id}
             onClick={() => onOpenLightbox(item)}
-            className="group relative rounded-3xl overflow-hidden bg-gray-900 border border-[#EFE7DA] dark:border-[#1F362E] cursor-pointer shadow-xs hover:shadow-2xl transition-all duration-300 aspect-[4/5]"
+            className="group editorial-card rounded-2xl overflow-hidden cursor-pointer flex flex-col justify-between"
           >
-            {/* Main Image */}
-            <img
-              src={item.imageUrl}
-              alt={item.title}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            />
+            {/* Image Container */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F4EFEB] dark:bg-[#1C1A18]">
+              <img
+                src={item.imageUrl}
+                alt={item.title}
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                loading="lazy"
+              />
 
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity" />
-
-            {/* Top Badges */}
-            <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-              <span className="px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold">
-                {item.category}
-              </span>
-              {item.stainedImageUrl && (
-                <span className="px-2.5 py-1 rounded-full bg-[#7A1C2D]/90 backdrop-blur-md text-white text-[10px] font-bold">
-                  Stain Preview
+              {/* Tag Overlays */}
+              <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10">
+                <span className="px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold uppercase tracking-wider">
+                  {item.category}
                 </span>
-              )}
-            </div>
+                {item.stainedImageUrl && (
+                  <span className="px-2.5 py-1 rounded-md bg-[#8E5A3C] text-white text-[10px] font-semibold uppercase tracking-wider">
+                    48h Stain
+                  </span>
+                )}
+              </div>
 
-            {/* Center Quick Zoom Icon on Hover */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg">
-                <ZoomIn className="w-5 h-5 text-[#E5C07B]" />
+              {/* Hover Zoom Icon */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
+                <div className="w-10 h-10 rounded-full bg-white text-[#1C1A18] flex items-center justify-center shadow-md">
+                  <ZoomIn className="w-4 h-4" />
+                </div>
               </div>
             </div>
 
-            {/* Bottom Content */}
-            <div className="absolute bottom-4 left-4 right-4 z-10 text-white space-y-1">
-              <h4 className="font-serif text-lg font-bold text-white group-hover:text-[#E5C07B] transition-colors leading-tight">
+            {/* Caption */}
+            <div className="p-5 space-y-1">
+              <h4 className="font-serif-editorial text-base font-bold text-[#1C1A18] dark:text-[#F7F5F0] group-hover:text-[#8E5A3C] transition-colors leading-tight">
                 {item.title}
               </h4>
-              <p className="text-xs text-gray-300 line-clamp-1 opacity-90">
+              <p className="text-xs text-[#6B665F] dark:text-[#A8A298] line-clamp-1">
                 {item.description}
               </p>
-              <div className="pt-2 flex items-center justify-between text-[11px] text-[#E5C07B]">
-                <span className="flex items-center gap-1">
-                  <Heart className="w-3.5 h-3.5 fill-current" />
-                  <span>{item.likesCount}</span>
-                </span>
-                <span className="underline">View HD Details →</span>
+              <div className="pt-2 flex items-center justify-between text-[11px] text-[#9E988F]">
+                <span>{item.likesCount} appreciations</span>
+                <span className="font-semibold text-[#1C1A18] dark:text-[#F7F5F0] group-hover:underline">View Details →</span>
               </div>
             </div>
 

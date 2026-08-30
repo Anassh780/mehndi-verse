@@ -1,120 +1,75 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Crown, Sparkles, ShieldCheck, Heart, Award, Globe, Users, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Check, ArrowRight } from 'lucide-react';
 
 export const AboutPage: React.FC = () => {
   return (
-    <div className="space-y-24 sm:space-y-32 pb-24">
+    <div className="space-y-24 pb-24">
       
-      {/* 1. Hero Header */}
-      <section className="relative pt-12 pb-8 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FEF9EE] dark:bg-[#282010] border border-[#C59B27]/40 text-[#9A7516] dark:text-[#E5C07B] text-xs font-semibold uppercase tracking-widest">
-          <Crown className="w-3.5 h-3.5 text-[#C59B27]" />
-          <span>Our Heritage & Vision</span>
-        </div>
-        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#1A2421] dark:text-[#F8F5EE] leading-tight">
-          Adorning Special Days with <br />
-          <span className="text-emerald-gradient dark:text-gold-gradient italic font-serif">
-            Authentic Living Art
-          </span>
+      {/* 1. Header */}
+      <section className="pt-12 text-center max-w-3xl mx-auto px-4 space-y-4">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8E5A3C] block">
+          Heritage & Mission
+        </span>
+        <h1 className="font-serif-editorial text-4xl sm:text-6xl font-bold text-[#1C1A18] dark:text-[#F7F5F0] leading-tight">
+          Crafted in Nature. Perfected by Masters.
         </h1>
-        <p className="text-base sm:text-lg text-[#5C6763] dark:text-[#B2C2BC] leading-relaxed max-w-2xl mx-auto">
-          Zari & Henna was founded to bridge sacred ancestral artistry with contemporary luxury marketplace standards — ensuring brides experience transparent pricing, punctual master artists, and 100% pure organic henna.
+        <p className="text-sm sm:text-base text-[#6B665F] dark:text-[#A8A298] leading-relaxed">
+          Zari & Henna was founded to elevate the historic ritual of bridal henna into a world-class luxury commission platform — connecting brides with vetted artisans who use exclusively pure botanical ingredients.
         </p>
       </section>
 
-      {/* 2. Visual Story Grid */}
+      {/* 2. Visual Story */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          <div className="lg:col-span-6 relative">
-            <div className="p-2 rounded-[2.5rem] bg-gradient-to-b from-[#EFE7DA] to-[#F8F4EB] dark:from-[#1F362E] dark:to-[#07100D] border border-[#C59B27]/40 shadow-2xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-6 space-y-6">
+            <h2 className="font-serif-editorial text-3xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+              The Botanical Standard
+            </h2>
+            <p className="text-xs sm:text-sm text-[#6B665F] dark:text-[#A8A298] leading-relaxed">
+              In commercial salons worldwide, synthetic chemical additives like PPD (para-phenylenediamine) and chemical solvents are frequently added to henna paste to artificially force an instant black stain. These chemicals can cause severe allergic dermatitis and chemical burns.
+            </p>
+            <p className="text-xs sm:text-sm text-[#6B665F] dark:text-[#A8A298] leading-relaxed">
+              Every artisan on the Zari & Henna platform signs our strict botanical charter. We mandate 100% pure triple-sifted Lawsonia Inermis leaves sourced from Sojat, Rajasthan, mixed solely with natural lemon juice, sugar, and therapeutic-grade cajeput or eucalyptus oils.
+            </p>
+
+            <div className="p-6 rounded-2xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] space-y-3">
+              <h3 className="font-serif-editorial font-bold text-base text-[#1C1A18] dark:text-[#F7F5F0]">
+                Our Quality Safeguards
+              </h3>
+              <div className="space-y-2 text-xs text-[#6B665F] dark:text-[#A8A298]">
+                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-[#385648]" /><span>100% Certified Chemical-Free Guarantee</span></div>
+                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-[#385648]" /><span>Portfolio Authenticity & Identity Verification</span></div>
+                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-[#385648]" /><span>Escrow Protection for 100% of Wedding Dates</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-6">
+            <div className="rounded-3xl overflow-hidden aspect-[4/3] bg-[#F4EFEB] border border-[#E8E2D9]">
               <img
-                src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1000&q=80"
-                alt="Heritage Rajasthani Henna"
-                className="w-full h-[450px] object-cover rounded-[calc(2.5rem-0.5rem)]"
+                src="https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&w=900&q=80"
+                alt="Henna Leaves & Cones"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
-
-          <div className="lg:col-span-6 space-y-6">
-            <div className="space-y-3">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#C59B27]">
-                The Artisan Heritage
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A2421] dark:text-[#F8F5EE]">
-                From Sojat’s Sunlit Fields to Global Wedding Ballrooms
-              </h2>
-              <p className="text-sm text-[#5C6763] dark:text-[#B2C2BC] leading-relaxed">
-                For centuries, Mehndi has been the ceremonial heart of South Asian and Middle Eastern celebrations. Our platform directly supports generational artisans who grind sun-dried Lawsonia inermis leaves with pure lavender, cajeput, and eucalyptus essential oils.
-              </p>
-              <p className="text-sm text-[#5C6763] dark:text-[#B2C2BC] leading-relaxed">
-                We eliminate the risk of synthetic "black henna" chemical burns by enforcing mandatory triple-filtered natural cone certifications on every artist listed in our atelier.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#0E1A16] border border-[#EFE7DA] dark:border-[#1F362E]">
-                <ShieldCheck className="w-6 h-6 text-[#10B981] mb-2" />
-                <h4 className="font-serif font-bold text-sm text-[#1A2421] dark:text-[#F8F5EE]">Zero PPD Guarantee</h4>
-                <p className="text-[11px] text-[#5C6763] dark:text-[#B2C2BC]">Laboratory tested natural herbal pastes only.</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#0E1A16] border border-[#EFE7DA] dark:border-[#1F362E]">
-                <Crown className="w-6 h-6 text-[#C59B27] mb-2" />
-                <h4 className="font-serif font-bold text-sm text-[#1A2421] dark:text-[#F8F5EE]">Escrow Date Protection</h4>
-                <p className="text-[11px] text-[#5C6763] dark:text-[#B2C2BC]">Deposits held securely until day of ceremony.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
 
-      {/* 3. Global Impact Numbers */}
-      <section className="bg-[#064E3B] text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-1">
-              <p className="font-serif text-4xl sm:text-5xl font-bold text-[#E5C07B]">12,500+</p>
-              <p className="text-xs uppercase tracking-widest text-emerald-200">Happy Brides</p>
-            </div>
-            <div className="space-y-1">
-              <p className="font-serif text-4xl sm:text-5xl font-bold text-[#E5C07B]">650+</p>
-              <p className="text-xs uppercase tracking-widest text-emerald-200">Verified Artists</p>
-            </div>
-            <div className="space-y-1">
-              <p className="font-serif text-4xl sm:text-5xl font-bold text-[#E5C07B]">85+</p>
-              <p className="text-xs uppercase tracking-widest text-emerald-200">Global Cities</p>
-            </div>
-            <div className="space-y-1">
-              <p className="font-serif text-4xl sm:text-5xl font-bold text-[#E5C07B]">4.98 ★</p>
-              <p className="text-xs uppercase tracking-widest text-emerald-200">Review Average</p>
-            </div>
+      {/* 3. Global Reach */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="p-8 sm:p-14 rounded-3xl bg-[#F4EFEB] dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] text-center space-y-6">
+          <h2 className="font-serif-editorial text-3xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+            Commission Your Artist Today
+          </h2>
+          <p className="text-xs sm:text-sm text-[#6B665F] dark:text-[#A8A298] max-w-lg mx-auto leading-relaxed">
+            Whether your ceremony is in Dubai, London, New York, or Lahore, our master artisans travel worldwide for bespoke commissions.
+          </p>
+          <div className="flex justify-center gap-3">
+            <Link to="/artists" className="btn-primary">Explore Master Artisans</Link>
+            <Link to="/contact" className="btn-secondary">Contact Concierge</Link>
           </div>
-        </div>
-      </section>
-
-      {/* 4. Call to Action */}
-      <section className="max-w-4xl mx-auto px-4 text-center space-y-6">
-        <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A2421] dark:text-[#F8F5EE]">
-          Ready to Plan Your Bridal Mehndi?
-        </h2>
-        <p className="text-sm text-[#5C6763] dark:text-[#B2C2BC] max-w-xl mx-auto">
-          Explore top certified artists in your city or take our interactive style recommendation quiz.
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link
-            to="/artists"
-            className="px-8 py-3.5 rounded-full bg-[#064E3B] text-white text-xs font-bold hover:bg-[#022C22] shadow-md"
-          >
-            Explore Master Artists
-          </Link>
-          <Link
-            to="/contact"
-            className="px-7 py-3.5 rounded-full border border-[#EFE7DA] dark:border-[#1F362E] text-xs font-semibold"
-          >
-            Contact Bridal Concierge
-          </Link>
         </div>
       </section>
 

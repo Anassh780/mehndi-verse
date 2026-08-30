@@ -1,220 +1,151 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, ChevronDown, Check, Sparkles, Crown } from 'lucide-react';
+import { Mail, Phone, MapPin, Check, ChevronDown } from 'lucide-react';
 
 export const ContactPage: React.FC = () => {
-  const [formSent, setFormSent] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-
-  const faqs = [
-    {
-      q: 'How far in advance should I book my bridal Mehndi artist?',
-      a: 'We strongly recommend booking 3 to 6 months in advance for peak wedding months (October through April). For destination weddings in Dubai, London, or Udaipur, 6 to 9 months advance notice is recommended.',
-    },
-    {
-      q: 'How does the deposit and payment guarantee work?',
-      a: 'When you book an artist through Zari & Henna, you pay a 25% deposit that is held securely in escrow. The remaining 75% balance is payable directly to the artist on your ceremony day.',
-    },
-    {
-      q: 'Are all artists verified to use 100% natural, chemical-free henna?',
-      a: 'Yes. Every artist listed on our platform signs our Strict Organic Guarantee. They use triple-sifted natural henna leaves infused with pure essential oils (eucalyptus, lavender, tea tree). Chemical black dyes and PPD additives are strictly banned.',
-    },
-    {
-      q: 'Can artists travel to international destination wedding venues?',
-      a: 'Yes! Most of our master artists travel internationally for destination weddings across Dubai, Italy, France, Mexico, Bali, and the Caribbean. Travel and accommodation packages can be coordinated via our VIP Concierge.',
-    },
-  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSent(true);
+    setSubmitted(true);
   };
 
+  const faqs = [
+    {
+      q: 'How far in advance should I book my bridal mehndi artist?',
+      a: 'We strongly recommend reserving 4 to 8 months in advance, especially for autumn/winter peak wedding seasons in Dubai, London, and Delhi.'
+    },
+    {
+      q: 'How do I ensure the darkest possible stain for wedding photos?',
+      a: 'Our artisans recommend scheduling application 48 hours prior to your main reception. Keep paste on for 6-8 hours with lemon-sugar sealant, avoid water for the first 24 hours, and apply coconut oil before showering.'
+    },
+    {
+      q: 'Are destination travel fees included in package prices?',
+      a: 'Package prices cover regional travel within the artist’s home hub city. For international destination commissions, travel flights and lodging are coordinated directly upon booking confirmation.'
+    },
+    {
+      q: 'Is the 25% date deposit refundable if my date shifts?',
+      a: 'Escrow date deposits are transferable to new dates with 30+ days notice, subject to the artist’s calendar availability.'
+    }
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16 pb-24">
       
       {/* Header */}
-      <div className="text-center max-w-2xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FEF9EE] dark:bg-[#282010] border border-[#C59B27]/40 text-[#9A7516] dark:text-[#E5C07B] text-xs font-semibold uppercase tracking-widest">
-          <Crown className="w-3.5 h-3.5 text-[#C59B27]" />
-          <span>VIP Concierge Support</span>
-        </div>
-        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[#1A2421] dark:text-[#F8F5EE]">
-          Connect with Our Bridal Atelier
+      <div className="text-center max-w-2xl mx-auto space-y-2">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8E5A3C] block">
+          Client Concierge & Inquiries
+        </span>
+        <h1 className="font-serif-editorial text-3xl sm:text-5xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+          Contact the Atelier
         </h1>
-        <p className="text-xs sm:text-sm text-[#5C6763] dark:text-[#B2C2BC]">
-          Have questions regarding destination wedding packages, artist availability, or bespoke bridal consultations? Our team is available 7 days a week.
+        <p className="text-xs sm:text-sm text-[#6B665F] dark:text-[#A8A298]">
+          Have questions regarding destination bookings, bespoke bridal party sizing, or botanical standards? Our concierge team is at your service.
         </p>
       </div>
 
-      {/* Main Grid: Form + Info */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Grid: Form + Hubs */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         
-        {/* Form Card */}
-        <div className="lg:col-span-7 p-6 sm:p-10 rounded-3xl bg-white dark:bg-[#0E1A16] border border-[#EFE7DA] dark:border-[#1F362E] shadow-sm space-y-6">
-          <h2 className="font-serif text-2xl font-bold text-[#1A2421] dark:text-[#F8F5EE]">
-            Send an Inquiry
-          </h2>
+        {/* Form (7 Cols) */}
+        <div className="lg:col-span-7 editorial-card rounded-2xl p-6 sm:p-10 space-y-6">
+          <h3 className="font-serif-editorial text-2xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+            Send an Atelier Inquiry
+          </h3>
 
-          {formSent ? (
-            <div className="p-8 rounded-2xl bg-[#ECFDF5] text-[#064E3B] border border-[#10B981]/30 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-[#10B981]/20 flex items-center justify-center mx-auto">
-                <Check className="w-6 h-6 text-[#10B981]" />
-              </div>
-              <h3 className="font-serif text-xl font-bold">Inquiry Received!</h3>
-              <p className="text-xs text-[#064E3B]/80 max-w-sm mx-auto">
-                Our VIP Bridal Concierge will review your event details and respond within 2-4 hours.
-              </p>
+          {submitted ? (
+            <div className="p-8 text-center rounded-xl bg-[#EEF4F0] border border-[#C8DBD0] space-y-3">
+              <Check className="w-8 h-8 text-[#385648] mx-auto" />
+              <h4 className="font-serif-editorial font-bold text-lg text-[#1C1A18]">Inquiry Transmitted</h4>
+              <p className="text-xs text-[#6B665F]">Our bridal concierge team will respond within 4 business hours.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-[#1A2421] dark:text-[#F8F5EE] block mb-1">Your Name</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Bride / Planner Name"
-                    className="w-full p-3 rounded-2xl bg-[#F8F4EB] dark:bg-[#07100D] border border-[#EFE7DA] dark:border-[#1F362E] text-xs text-[#1A2421] dark:text-[#F8F5EE] focus:outline-none focus:border-[#C59B27]"
-                  />
+                <div className="space-y-1">
+                  <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Your Name</label>
+                  <input type="text" required placeholder="Suhana Patel" className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]" />
                 </div>
-                <div>
-                  <label className="text-xs font-bold text-[#1A2421] dark:text-[#F8F5EE] block mb-1">Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="bride@example.com"
-                    className="w-full p-3 rounded-2xl bg-[#F8F4EB] dark:bg-[#07100D] border border-[#EFE7DA] dark:border-[#1F362E] text-xs text-[#1A2421] dark:text-[#F8F5EE] focus:outline-none focus:border-[#C59B27]"
-                  />
+                <div className="space-y-1">
+                  <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Email</label>
+                  <input type="email" required placeholder="suhana@example.com" className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-[#1A2421] dark:text-[#F8F5EE] block mb-1">Phone / WhatsApp</label>
-                  <input
-                    type="tel"
-                    placeholder="+971 50 000 0000"
-                    className="w-full p-3 rounded-2xl bg-[#F8F4EB] dark:bg-[#07100D] border border-[#EFE7DA] dark:border-[#1F362E] text-xs text-[#1A2421] dark:text-[#F8F5EE] focus:outline-none focus:border-[#C59B27]"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-[#1A2421] dark:text-[#F8F5EE] block mb-1">Wedding City / Country</label>
-                  <input
-                    type="text"
-                    placeholder="Dubai, London, Jaipur, etc."
-                    className="w-full p-3 rounded-2xl bg-[#F8F4EB] dark:bg-[#07100D] border border-[#EFE7DA] dark:border-[#1F362E] text-xs text-[#1A2421] dark:text-[#F8F5EE] focus:outline-none focus:border-[#C59B27]"
-                  />
-                </div>
+              <div className="space-y-1">
+                <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Wedding Destination City & Date</label>
+                <input type="text" required placeholder="e.g. Dubai, UAE · November 2026" className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]" />
               </div>
 
-              <div>
-                <label className="text-xs font-bold text-[#1A2421] dark:text-[#F8F5EE] block mb-1">Message / Consultation Needs</label>
-                <textarea
-                  rows={4}
-                  required
-                  placeholder="Share your wedding date, desired style, or questions..."
-                  className="w-full p-3 rounded-2xl bg-[#F8F4EB] dark:bg-[#07100D] border border-[#EFE7DA] dark:border-[#1F362E] text-xs text-[#1A2421] dark:text-[#F8F5EE] focus:outline-none focus:border-[#C59B27]"
-                />
+              <div className="space-y-1">
+                <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Inquiry Details</label>
+                <textarea rows={4} required placeholder="Please describe your bridal needs, guest count, or questions..." className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]" />
               </div>
 
-              <button
-                type="submit"
-                className="w-full py-3.5 rounded-full bg-[#064E3B] text-white font-bold text-xs hover:bg-[#022C22] transition-all flex items-center justify-center gap-2 shadow-md"
-              >
-                <span>Submit Inquiry to Concierge</span>
-                <Send className="w-4 h-4" />
+              <button type="submit" className="btn-primary !py-3 !px-8">
+                Transmit Inquiry
               </button>
             </form>
           )}
         </div>
 
-        {/* Right Info Cards */}
+        {/* Global Hubs (5 Cols) */}
         <div className="lg:col-span-5 space-y-6">
-          
-          {/* Direct WhatsApp Concierge Card */}
-          <div className="p-6 rounded-3xl bg-gradient-to-br from-[#064E3B] to-[#022C22] text-white border border-[#C59B27]/40 shadow-lg space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center text-white">
-                <Phone className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-serif font-bold text-base">Direct WhatsApp Line</h3>
-                <p className="text-[11px] text-emerald-200">Instant Bridal Support & Scheduling</p>
-              </div>
-            </div>
-            <p className="text-xs text-gray-200 leading-relaxed">
-              Prefer instant messaging? Chat directly with our bridal concierge team on WhatsApp for real-time artist availability checks.
-            </p>
-            <a
-              href="https://whatsapp.com"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block w-full text-center py-2.5 rounded-full bg-[#25D366] text-white font-bold text-xs hover:bg-[#1EBE5D] transition-colors"
-            >
-              Open WhatsApp Concierge →
-            </a>
-          </div>
-
-          {/* Global Atelier Hubs */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#0E1A16] border border-[#EFE7DA] dark:border-[#1F362E] shadow-xs space-y-4">
-            <h3 className="font-serif text-lg font-bold text-[#1A2421] dark:text-[#F8F5EE]">
-              Global Headquarters & Studios
+          <div className="editorial-card rounded-2xl p-6 space-y-4">
+            <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+              Global Atelier Hubs
             </h3>
-            <div className="space-y-3 text-xs text-[#5C6763] dark:text-[#B2C2BC]">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-[#C59B27] shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-[#1A2421] dark:text-[#F8F5EE]">Dubai Hub</p>
-                  <p>Boulevard Plaza Tower 1, Downtown Dubai, UAE</p>
-                </div>
+            <div className="space-y-3 text-xs text-[#6B665F] dark:text-[#A8A298]">
+              <div className="p-3 rounded-lg bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9]">
+                <p className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">Dubai Atelier</p>
+                <p>Downtown Dubai & Palm Jumeirah Concierge</p>
+                <p className="text-[11px] text-[#8E5A3C] mt-1">+971 4 800 HENNA</p>
               </div>
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-[#C59B27] shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-[#1A2421] dark:text-[#F8F5EE]">London Studio</p>
-                  <p>Berkeley Square House, Mayfair, London W1J 6BD, UK</p>
-                </div>
+
+              <div className="p-3 rounded-lg bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9]">
+                <p className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">London Atelier</p>
+                <p>Mayfair & Knightsbridge Concierge</p>
+                <p className="text-[11px] text-[#8E5A3C] mt-1">+44 20 7946 0991</p>
               </div>
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-[#C59B27] shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-[#1A2421] dark:text-[#F8F5EE]">Delhi NCR Office</p>
-                  <p>Aerocity Worldmark, New Delhi 110037, India</p>
-                </div>
+
+              <div className="p-3 rounded-lg bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9]">
+                <p className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">New York Atelier</p>
+                <p>Manhattan & Tri-State Concierge</p>
+                <p className="text-[11px] text-[#8E5A3C] mt-1">+1 212 555 0198</p>
               </div>
             </div>
           </div>
-
         </div>
 
       </div>
 
-      {/* FAQs Section */}
-      <div className="max-w-4xl mx-auto space-y-6 pt-8">
-        <h2 className="font-serif text-2xl sm:text-3xl font-bold text-center text-[#1A2421] dark:text-[#F8F5EE]">
-          Frequently Asked Questions
-        </h2>
+      {/* FAQ Accordion */}
+      <div className="max-w-3xl mx-auto space-y-6 pt-12">
+        <h3 className="font-serif-editorial text-2xl font-bold text-center text-[#1C1A18] dark:text-[#F7F5F0]">
+          Frequently Addressed Questions
+        </h3>
+
         <div className="space-y-3">
-          {faqs.map((faq, i) => {
-            const isOpen = openFaqIndex === i;
-            return (
-              <div
-                key={i}
-                className="p-5 rounded-2xl bg-white dark:bg-[#0E1A16] border border-[#EFE7DA] dark:border-[#1F362E] cursor-pointer"
-                onClick={() => setOpenFaqIndex(isOpen ? null : i)}
+          {faqs.map((faq, i) => (
+            <div
+              key={i}
+              className="editorial-card rounded-xl overflow-hidden"
+            >
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                className="w-full p-4 text-left text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0] flex justify-between items-center"
               >
-                <div className="flex items-center justify-between gap-4">
-                  <h3 className="font-serif font-bold text-sm text-[#1A2421] dark:text-[#F8F5EE]">{faq.q}</h3>
-                  <ChevronDown className={`w-4 h-4 text-[#C59B27] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <span>{faq.q}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${openFaqIndex === i ? 'rotate-180' : ''}`} />
+              </button>
+              {openFaqIndex === i && (
+                <div className="p-4 pt-0 text-xs text-[#6B665F] dark:text-[#A8A298] leading-relaxed border-t border-[#F0EAE1]">
+                  {faq.a}
                 </div>
-                {isOpen && (
-                  <p className="text-xs text-[#5C6763] dark:text-[#B2C2BC] pt-3 leading-relaxed border-t border-[#EFE7DA] dark:border-[#1F362E] mt-3">
-                    {faq.a}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
