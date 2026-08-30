@@ -11,32 +11,32 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const saved = localStorage.getItem('dta_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
-    return 'light';
-  });
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('dta_theme', theme);
-  }, [theme]);
+    root.classList.remove('dark');
+    root.classList.add('light');
+    localStorage.removeItem('dta_theme');
+    localStorage.setItem('henna_theme', 'light');
+  }, []);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
   };
 
   const toggleTheme = () => {
-    setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setThemeState('light');
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        setTheme,
+        toggleTheme,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );
@@ -45,7 +45,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    // Graceful fallback if used outside ThemeProvider
     return {
       theme: 'light' as Theme,
       setTheme: () => {},
