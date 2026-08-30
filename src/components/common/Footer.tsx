@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check } from 'lucide-react';
+import { ShieldCheck, Sparkles, Check, ArrowRight } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,102 +11,119 @@ export const Footer: React.FC = () => {
     if (email) {
       setSubscribed(true);
       setEmail('');
+      setTimeout(() => setSubscribed(false), 4000);
     }
   };
 
   return (
-    <footer className="bg-[#1C1A18] text-[#F7F5F0] border-t border-[#2A2724] pt-16 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <footer className="bg-[#1b1815] text-[#f7f1e6] border-t border-[rgba(247,241,230,0.12)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-12">
         
-        {/* Top Newsletter & Statement */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12 border-b border-[#2A2724] items-start">
-          <div className="lg:col-span-6 space-y-3">
-            <h3 className="font-serif-editorial text-2xl sm:text-3xl text-white font-bold">
+        {/* Top Gazette Newsletter Row */}
+        <div className="p-6 sm:p-10 rounded-3xl bg-[rgba(247,241,230,0.04)] border border-[rgba(247,241,230,0.08)] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div className="space-y-1 max-w-md">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c9a227] block">
               The Bridal Henna Gazette
+            </span>
+            <h3 className="font-serif-editorial text-2xl font-bold text-[#f7f1e6]">
+              Curated bridal lookbooks & oxidation rituals.
             </h3>
-            <p className="text-xs text-[#A8A298] max-w-md leading-relaxed">
-              Curated seasonal lookbooks, stain aftercare rituals, and private opening alerts from master artisans across Dubai, London, and New York.
+            <p className="text-xs text-[#f7f1e6]/70">
+              Delivered fortnightly to discerning brides in Dubai, London, and New York.
             </p>
           </div>
 
-          <div className="lg:col-span-6">
-            {subscribed ? (
-              <div className="p-3.5 rounded-lg bg-[#23211E] border border-[#385648] text-[#5E8C75] text-xs flex items-center gap-2">
-                <Check className="w-4 h-4" />
-                <span>You are subscribed to the Atelier Gazette.</span>
-              </div>
-            ) : (
-              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 max-w-md">
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter your email address..."
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded-full bg-[#23211E] border border-[#383430] text-white text-xs placeholder-[#6E6860] focus:outline-none focus:border-[#D4A373]"
-                />
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-full bg-[#F7F5F0] text-[#1C1A18] text-xs font-semibold uppercase tracking-wider hover:bg-white transition-colors"
-                >
-                  Join
-                </button>
-              </form>
+          <form onSubmit={handleSubscribe} className="w-full lg:w-auto flex-1 max-w-md space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="email"
+                required
+                placeholder="Enter your bridal email address..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 bg-[rgba(247,241,230,0.08)] border border-[rgba(247,241,230,0.14)] rounded-full px-4 py-2.5 text-xs text-[#f7f1e6] placeholder-[rgba(247,241,230,0.4)] focus:outline-none focus:border-[#c9a227]"
+              />
+              <button
+                type="submit"
+                className="btn btn-primary !py-2.5 !px-5 !text-xs whitespace-nowrap !rounded-full"
+              >
+                <span>Subscribe</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            {subscribed && (
+              <p className="text-xs text-[#c9a227] flex items-center gap-1.5 font-medium">
+                <Check className="w-3.5 h-3.5" />
+                <span>Thank you. Your wedding invitation archive is confirmed.</span>
+              </p>
             )}
-          </div>
+          </form>
         </div>
 
-        {/* Middle Navigation & Hubs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-12 border-b border-[#2A2724] text-xs">
+        {/* 4-Column Directory */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-xs">
           
-          <div className="space-y-3">
-            <p className="font-semibold uppercase tracking-wider text-[#A8A298] text-[11px]">Collections</p>
-            <ul className="space-y-2 text-[#D1C9BC]">
+          {/* Col 1: Brand */}
+          <div className="space-y-3 col-span-2 md:col-span-1">
+            <span className="font-serif-editorial text-xl font-bold text-[#f7f1e6] block">
+              Zari & Henna
+            </span>
+            <p className="text-[#f7f1e6]/70 leading-relaxed">
+              The premier global marketplace connecting discerning brides with certified master mehndi ateliers.
+            </p>
+            <div className="flex items-center gap-1 text-[11px] text-[#c9a227] font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Certified 100% Organic Henna</span>
+            </div>
+          </div>
+
+          {/* Col 2: Marketplace */}
+          <div className="space-y-2.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#c9a227] block">
+              Explore Atelier
+            </span>
+            <ul className="space-y-2 text-[#f7f1e6]/70">
               <li><Link to="/artists" className="hover:text-white transition-colors">Master Artisans</Link></li>
-              <li><Link to="/#categories" className="hover:text-white transition-colors">Bridal Traditions</Link></li>
-              <li><Link to="/blog" className="hover:text-white transition-colors">Lookbook & Care</Link></li>
+              <li><Link to="/artists?style=Bridal" className="hover:text-white transition-colors">Royal Bridal Packages</Link></li>
+              <li><Link to="/artists?style=Arabic" className="hover:text-white transition-colors">Khaleeji Floral Motifs</Link></li>
+              <li><Link to="/artists?style=Rajasthani" className="hover:text-white transition-colors">Rajasthani Figurine Jaal</Link></li>
             </ul>
           </div>
 
-          <div className="space-y-3">
-            <p className="font-semibold uppercase tracking-wider text-[#A8A298] text-[11px]">Atelier Hubs</p>
-            <ul className="space-y-2 text-[#D1C9BC]">
-              <li><Link to="/artists?city=Dubai" className="hover:text-white transition-colors">Dubai & Gulf</Link></li>
+          {/* Col 3: Destination Hubs */}
+          <div className="space-y-2.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#c9a227] block">
+              Destination Hubs
+            </span>
+            <ul className="space-y-2 text-[#f7f1e6]/70">
+              <li><Link to="/artists?city=Dubai" className="hover:text-white transition-colors">Dubai & Emirates</Link></li>
               <li><Link to="/artists?city=London" className="hover:text-white transition-colors">London & Mayfair</Link></li>
-              <li><Link to="/artists?city=New%20York" className="hover:text-white transition-colors">New York & Tri-State</Link></li>
-              <li><Link to="/artists?city=New%20Delhi" className="hover:text-white transition-colors">Delhi NCR & Jaipur</Link></li>
+              <li><Link to="/artists?city=New+York" className="hover:text-white transition-colors">New York & Tri-State</Link></li>
+              <li><Link to="/artists?city=Delhi" className="hover:text-white transition-colors">Delhi NCR & Lahore</Link></li>
             </ul>
           </div>
 
-          <div className="space-y-3">
-            <p className="font-semibold uppercase tracking-wider text-[#A8A298] text-[11px]">For Artisans</p>
-            <ul className="space-y-2 text-[#D1C9BC]">
-              <li><Link to="/signup?role=artist" className="hover:text-white transition-colors">Join Atelier</Link></li>
-              <li><Link to="/artist-dashboard" className="hover:text-white transition-colors">Studio Portal</Link></li>
-              <li><Link to="/about" className="hover:text-white transition-colors">Botanical Standards</Link></li>
-            </ul>
-          </div>
-
-          <div className="space-y-3">
-            <p className="font-semibold uppercase tracking-wider text-[#A8A298] text-[11px]">Inquiries</p>
-            <ul className="space-y-2 text-[#D1C9BC]">
-              <li><Link to="/contact" className="hover:text-white transition-colors">Private Concierge</Link></li>
-              <li><Link to="/about" className="hover:text-white transition-colors">Heritage Story</Link></li>
-              <li><Link to="/contact" className="hover:text-white transition-colors">FAQ</Link></li>
+          {/* Col 4: Standards & Editorial */}
+          <div className="space-y-2.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#c9a227] block">
+              Editorial & Legal
+            </span>
+            <ul className="space-y-2 text-[#f7f1e6]/70">
+              <li><Link to="/blog" className="hover:text-white transition-colors">The Henna Gazette</Link></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">Botanical Purity Pledge</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Bridal Concierge</Link></li>
+              <li><Link to="/login" className="hover:text-white transition-colors">Artist Studio Portal</Link></li>
             </ul>
           </div>
 
         </div>
 
-        {/* Bottom Bar: Botanical Guarantee + Copyright */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#6E6860]">
-          <p>
-            100% Pure Botanical Henna Promise · Zero Synthetic Chemical Enhancers.
-          </p>
+        {/* Bottom Hairline & Copyright */}
+        <div className="pt-8 border-t border-[rgba(247,241,230,0.08)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#f7f1e6]/50">
+          <p>© {new Date().getFullYear()} Zari & Henna Atelier Ltd. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <p>© {new Date().getFullYear()} ZARI & HENNA ATELIER INC.</p>
-            <Link to="/about" className="hover:text-white transition-colors">Privacy</Link>
-            <Link to="/about" className="hover:text-white transition-colors">Terms</Link>
+            <span>Dubai · London · New York</span>
+            <span>Escrow Protected</span>
           </div>
         </div>
 

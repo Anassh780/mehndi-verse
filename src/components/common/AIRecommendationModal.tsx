@@ -1,313 +1,244 @@
 import React, { useState } from 'react';
-import { Sparkles, X, ArrowRight, ArrowLeft, Check, Star } from 'lucide-react';
-import { AIQuizPreferences, AIRecommendationResult } from '@/types/mehndi';
-import { getAIRecommendation } from '@/services/aiRecommendationService';
 import { useNavigate } from 'react-router-dom';
+import { X, Sparkles, Check, ArrowRight, RotateCcw } from 'lucide-react';
+import { MOCK_ARTISTS } from '@/services/mehndiData';
+import { useBooking } from '@/context/BookingContext';
 
 interface AIRecommendationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const AIRecommendationModal: React.FC<AIRecommendationModalProps> = ({ isOpen, onClose }) => {
-  const [step, setStep] = useState(1);
-  const [preferences, setPreferences] = useState<AIQuizPreferences>({
-    eventType: 'Wedding',
-    handCoverage: 'Elbow High',
-    designStyle: 'Undecided / Recommend for me',
-    outfitColor: 'Ruby Red / Maroon',
-    intricacyLevel: 'Dense Traditional Jali & Figures',
-    budgetMax: 650,
-    city: 'All Cities',
-  });
-  const [result, setResult] = useState<AIRecommendationResult | null>(null);
-  const [isCalculating, setIsCalculating] = useState(false);
+export const AIRecommendationModal: React.FC<AIRecommendationModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const navigate = useNavigate();
+  const { selectArtistAndPackage } = useBooking();
+
+  const [step, setStep] = useState(1);
+  const [answers, setAnswers] = useState({
+    occasion: '',
+    gownColor: '',
+    coverage: '',
+    intricacy: '',
+  });
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [recommendation, setRecommendation] = useState<any>(null);
 
   if (!isOpen) return null;
 
-  const handleGenerate = () => {
-    setIsCalculating(true);
-    setTimeout(() => {
-      const rec = getAIRecommendation(preferences);
-      setResult(rec);
-      setIsCalculating(false);
-      setStep(5);
-    }, 800);
+  const handleSelectOption = (key: string, value: string) => {
+    const updated = { ...answers, [key]: value };
+    setAnswers(updated);
+
+    if (step < 4) {
+      setStep(step + 1);
+    } else {
+      setIsCalculating(true);
+      setTimeout(() => {
+        setIsCalculating(false);
+        setRecommendation({
+          styleName: 'Royal Rajasthani Figurine Jaal with Khaleeji Cuffs',
+          description: 'A bespoke fusion incorporating intricate elephant & bride-groom portraits on the palms, paired with modern floral negative-space cuffs that complement your wedding gown palette.',
+          curingAdvice: 'Book application 48 hours before the Sangeet/Main Reception. Apply natural clove oil steam 24 hours post-peel for maximum deep burgundy oxidation.',
+          matchedArtist: MOCK_ARTISTS[0],
+        });
+      }, 1000);
+    }
   };
 
   const handleReset = () => {
     setStep(1);
-    setResult(null);
+    setAnswers({ occasion: '', gownColor: '', coverage: '', intricacy: '' });
+    setRecommendation(null);
   };
 
-  const handleBookArtist = (artistId: string) => {
-    onClose();
-    navigate(`/book/${artistId}`);
+  const handleBookRecommended = () => {
+    if (recommendation?.matchedArtist) {
+      selectArtistAndPackage(recommendation.matchedArtist);
+      onClose();
+      navigate(`/book/${recommendation.matchedArtist.id}`);
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-150">
-      <div className="relative w-full max-w-2xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] rounded-2xl overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1b1815]/85 backdrop-blur-md animate-in fade-in duration-200">
+      
+      <div className="relative w-full max-w-xl bg-[#f7f1e6] border border-[rgba(27,24,21,0.12)] rounded-3xl p-6 sm:p-10 shadow-2xl overflow-hidden">
         
         {/* Header */}
-        <div className="p-6 pb-4 border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center justify-between bg-white dark:bg-[#1C1A18]">
-          <div>
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-[#8E5A3C] block mb-1">
-              Atelier Consultation
-            </span>
-            <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+        <div className="flex items-center justify-between pb-4 border-b border-[rgba(27,24,21,0.1)]">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-[#9c4221]" />
+            <span className="font-serif-editorial text-xl font-bold text-[#1b1815]">
               AI Bridal Style Advisor
-            </h3>
+            </span>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-[#6B665F] hover:text-[#1C1A18] dark:hover:text-white"
+            className="w-8 h-8 rounded-full bg-[#efe6d4] flex items-center justify-center text-[#1b1815] hover:bg-[rgba(27,24,21,0.15)] transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="p-6 sm:p-8 max-h-[75vh] overflow-y-auto">
+        {/* Content Body */}
+        <div className="py-6">
           
-          {step <= 4 && (
-            <div className="mb-6 space-y-2">
-              <div className="flex justify-between text-xs text-[#6B665F] dark:text-[#A8A298] font-medium">
-                <span>Step {step} of 4</span>
-                <span>{step === 1 ? 'Occasion' : step === 2 ? 'Coverage' : step === 3 ? 'Gown Tone' : 'Intricacy'}</span>
-              </div>
-              <div className="w-full h-1 bg-[#E8E2D9] dark:bg-[#2A2724] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#1C1A18] dark:bg-[#F7F5F0] transition-all duration-300"
-                  style={{ width: `${(step / 4) * 100}%` }}
-                />
-              </div>
+          {/* Loading Animation */}
+          {isCalculating && (
+            <div className="py-16 text-center space-y-4">
+              <div className="spinner mx-auto" />
+              <p className="font-serif-editorial text-lg font-bold text-[#1b1815]">
+                Curating bespoke motif traditions...
+              </p>
+              <p className="text-xs text-[#2c2620]/70">Analyzing regional henna styles against your bridal ceremony palette.</p>
             </div>
           )}
 
-          {/* STEP 1: Occasion */}
-          {step === 1 && (
-            <div className="space-y-4">
-              <h4 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                What ceremony are you commissioning for?
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { id: 'Wedding', title: 'Main Bridal Ceremony', desc: 'Full regal storytelling coverage & portraits' },
-                  { id: 'Sangeet / Mehendi Night', title: 'Sangeet & Party Henna', desc: 'Festive, quick-drying party elegance' },
-                  { id: 'Engagement', title: 'Engagement / Roka', desc: 'Modern cuffs, minimal jewelry rings' },
-                  { id: 'Eid / Festival', title: 'Eid / Festival Celebrations', desc: 'Graceful festive mandalas & vines' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setPreferences({ ...preferences, eventType: item.id })}
-                    className={`p-4 rounded-xl text-left border transition-all ${
-                      preferences.eventType === item.id
-                        ? 'border-[#1C1A18] dark:border-[#F7F5F0] bg-white dark:bg-[#1C1A18]'
-                        : 'border-[#E8E2D9] dark:border-[#2A2724] hover:border-gray-400'
-                    }`}
-                  >
-                    <p className="font-bold text-xs text-[#1C1A18] dark:text-[#F7F5F0]">{item.title}</p>
-                    <p className="text-[11px] text-[#6B665F] dark:text-[#A8A298] mt-1">{item.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2: Coverage */}
-          {step === 2 && (
-            <div className="space-y-4">
-              <h4 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                What level of coverage do you envision?
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { id: 'Full Bridal Set (Hands + Feet)', title: 'Full Heirloom Suite', desc: 'Hands past elbows + feet to mid-calf' },
-                  { id: 'Elbow High', title: 'Elbow-Length Grandeur', desc: 'Both sides of hands up to the elbow' },
-                  { id: 'Forearm', title: 'Forearm to Wrist', desc: 'Classic mid-coverage, highly versatile' },
-                  { id: 'Palms Only', title: 'Palms & Delicate Cuffs', desc: 'Subtle jewel accents & finger rings' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setPreferences({ ...preferences, handCoverage: item.id })}
-                    className={`p-4 rounded-xl text-left border transition-all ${
-                      preferences.handCoverage === item.id
-                        ? 'border-[#1C1A18] dark:border-[#F7F5F0] bg-white dark:bg-[#1C1A18]'
-                        : 'border-[#E8E2D9] dark:border-[#2A2724] hover:border-gray-400'
-                    }`}
-                  >
-                    <p className="font-bold text-xs text-[#1C1A18] dark:text-[#F7F5F0]">{item.title}</p>
-                    <p className="text-[11px] text-[#6B665F] dark:text-[#A8A298] mt-1">{item.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: Outfit Tone */}
-          {step === 3 && (
-            <div className="space-y-4">
-              <h4 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                What is the dominant tone of your wedding attire?
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {[
-                  { id: 'Ruby Red / Maroon', color: '#7A1C2D' },
-                  { id: 'Emerald Green', color: '#064E3B' },
-                  { id: 'Champagne Gold / Ivory', color: '#C59B27' },
-                  { id: 'Pastel Pink / Peach', color: '#E8A598' },
-                  { id: 'Royal Navy / Velvet Blue', color: '#1E3A8A' },
-                  { id: 'Mustard / Yellow', color: '#D97706' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setPreferences({ ...preferences, outfitColor: item.id })}
-                    className={`p-3.5 rounded-xl text-center border flex flex-col items-center gap-2 transition-all ${
-                      preferences.outfitColor === item.id
-                        ? 'border-[#1C1A18] dark:border-[#F7F5F0] bg-white dark:bg-[#1C1A18]'
-                        : 'border-[#E8E2D9] dark:border-[#2A2724]'
-                    }`}
-                  >
-                    <div className="w-5 h-5 rounded-full border border-black/20" style={{ backgroundColor: item.color }} />
-                    <span className="text-[11px] font-semibold text-[#1C1A18] dark:text-[#F7F5F0]">{item.id}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* STEP 4: Intricacy */}
-          {step === 4 && (
-            <div className="space-y-4">
-              <h4 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                Select artistic intricacy
-              </h4>
-              <div className="space-y-3">
-                {[
-                  { id: 'Dense Traditional Jali & Figures', title: 'Dense Symmetrical Jaal & Storytelling', desc: 'Ultra-fine mesh lattice, couple portraits, royal peacocks, and hidden dates' },
-                  { id: 'Bold & Arabic Cut', title: 'Bold Arabic & Negative Space', desc: 'High-contrast negative skin space, flowing vines, and dramatic shaded petals' },
-                  { id: 'Delicate & Fine lines', title: 'Contemporary Minimalist Lace', desc: 'Delicate jewelry draping, focal solar mandalas, and clean architectural lines' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setPreferences({ ...preferences, intricacyLevel: item.id as any })}
-                    className={`w-full p-4 rounded-xl text-left border transition-all ${
-                      preferences.intricacyLevel === item.id
-                        ? 'border-[#1C1A18] dark:border-[#F7F5F0] bg-white dark:bg-[#1C1A18]'
-                        : 'border-[#E8E2D9] dark:border-[#2A2724]'
-                    }`}
-                  >
-                    <p className="font-bold text-xs text-[#1C1A18] dark:text-[#F7F5F0]">{item.title}</p>
-                    <p className="text-[11px] text-[#6B665F] dark:text-[#A8A298] mt-1">{item.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* RESULTS */}
-          {step === 5 && result && (
-            <div className="space-y-6 animate-in fade-in duration-200">
-              <div className="p-6 rounded-2xl bg-[#1C1A18] text-white space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4A373]">
-                  Recommended Tradition
+          {/* Result Card */}
+          {!isCalculating && recommendation && (
+            <div className="space-y-6 animate-in fade-in duration-300">
+              <div className="space-y-2">
+                <span className="badge">
+                  <span>Curated Bridal Recommendation</span>
                 </span>
-                <h4 className="font-serif-editorial text-2xl font-bold">
-                  {result.recommendedStyle}
-                </h4>
-                <p className="text-xs text-[#A8A298] leading-relaxed">
-                  {result.styleDescription}
+                <h3 className="font-serif-editorial text-2xl font-bold text-[#1b1815]">
+                  {recommendation.styleName}
+                </h3>
+                <p className="text-xs text-[#2c2620]/80 leading-relaxed font-sans">
+                  {recommendation.description}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] space-y-1">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8E5A3C]">Pattern Advice</p>
-                  <p className="text-xs text-[#6B665F] dark:text-[#A8A298] leading-relaxed">{result.curatedPatternAdvice}</p>
-                </div>
-                <div className="p-4 rounded-xl bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] space-y-1">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8E5A3C]">Gown Harmony</p>
-                  <p className="text-xs text-[#6B665F] dark:text-[#A8A298] leading-relaxed">{result.outfitHarmonyTip}</p>
-                </div>
+              <div className="p-4 rounded-xl bg-[#efe6d4] border border-[rgba(27,24,21,0.08)] space-y-1.5 text-xs">
+                <p className="font-bold text-[#9c4221]">48-Hour Staining Protocol:</p>
+                <p className="text-[#2c2620]/80">{recommendation.curingAdvice}</p>
               </div>
 
-              <div className="space-y-3">
-                <p className="font-serif-editorial text-base font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                  Matched Master Artisans:
-                </p>
-                {result.matchedArtists.map((artist) => (
-                  <div
-                    key={artist.id}
-                    className="p-3.5 rounded-xl bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] flex items-center justify-between gap-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <img src={artist.avatar} alt={artist.name} className="w-10 h-10 rounded-full object-cover border border-[#E8E2D9]" />
-                      <div>
-                        <p className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{artist.name}</p>
-                        <p className="text-[11px] text-[#6B665F]">{artist.city} · {artist.rating} ★</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleBookArtist(artist.id)}
-                      className="btn-primary !py-1.5 !px-3.5 !text-[11px]"
-                    >
-                      Reserve
-                    </button>
+              {/* Matched Artist Preview */}
+              <div className="p-4 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#f7f1e6] flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={recommendation.matchedArtist.avatar}
+                    alt={recommendation.matchedArtist.name}
+                    className="w-12 h-12 rounded-full object-cover border"
+                  />
+                  <div>
+                    <p className="text-xs font-bold text-[#1b1815]">{recommendation.matchedArtist.name}</p>
+                    <p className="text-[11px] text-[#2c2620]/70">{recommendation.matchedArtist.city} · {recommendation.matchedArtist.rating} ★</p>
                   </div>
-                ))}
+                </div>
+                <button
+                  onClick={handleBookRecommended}
+                  className="btn btn-primary !py-2 !px-4 !text-xs whitespace-nowrap"
+                >
+                  <span>Book Artist</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="flex justify-between items-center pt-2">
+                <button
+                  onClick={handleReset}
+                  className="text-xs text-[#2c2620]/70 hover:text-[#9c4221] flex items-center gap-1 font-semibold"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Start Consultation Over</span>
+                </button>
               </div>
             </div>
           )}
 
-        </div>
+          {/* Interactive 4-Step Questionnaire */}
+          {!isCalculating && !recommendation && (
+            <div className="space-y-6">
+              
+              <div className="flex items-center justify-between text-xs text-[#2c2620]/70">
+                <span>Step {step} of 4</span>
+                <span>{step === 1 ? 'Occasion' : step === 2 ? 'Gown Tone' : step === 3 ? 'Coverage' : 'Intricacy'}</span>
+              </div>
 
-        {/* Footer */}
-        <div className="p-6 pt-4 border-t border-[#E8E2D9] dark:border-[#2A2724] bg-white dark:bg-[#1C1A18] flex items-center justify-between">
-          {step <= 4 ? (
-            <>
-              {step > 1 ? (
-                <button
-                  onClick={() => setStep(step - 1)}
-                  className="btn-secondary !py-2 !px-4 !text-[11px]"
-                >
-                  <ArrowLeft className="w-3 h-3" />
-                  <span>Back</span>
-                </button>
-              ) : <div />}
-
-              {step < 4 ? (
-                <button
-                  onClick={() => setStep(step + 1)}
-                  className="btn-primary !py-2 !px-5 !text-[11px]"
-                >
-                  <span>Continue</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
-              ) : (
-                <button
-                  onClick={handleGenerate}
-                  disabled={isCalculating}
-                  className="btn-primary !py-2 !px-6 !text-[11px]"
-                >
-                  <span>{isCalculating ? 'Consulting...' : 'View Recommendations'}</span>
-                </button>
+              {/* Step 1: Occasion */}
+              {step === 1 && (
+                <div className="space-y-3">
+                  <h4 className="font-serif-editorial text-xl font-bold text-[#1b1815]">What is the primary occasion?</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {['Main Wedding Ceremony', 'Sangeet & Mehendi Night', 'Destination Elopement', 'Eid & Festive Celebration'].map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => handleSelectOption('occasion', opt)}
+                        className="p-3.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] hover:border-[#9c4221] text-xs font-semibold text-[#1b1815] text-left transition-all cursor-pointer"
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
-            </>
-          ) : (
-            <div className="w-full flex items-center justify-between">
-              <button onClick={handleReset} className="text-xs text-[#6B665F] hover:underline">
-                ← Retake Consultation
-              </button>
-              <button onClick={onClose} className="btn-primary !py-2 !px-5 !text-[11px]">
-                Browse Marketplace
-              </button>
+
+              {/* Step 2: Gown Tone */}
+              {step === 2 && (
+                <div className="space-y-3">
+                  <h4 className="font-serif-editorial text-xl font-bold text-[#1b1815]">What tone is your bridal ensemble?</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {['Classic Deep Crimson / Maroon', 'Pastel Blush / Champagne Gold', 'Emerald / Royal Jewel Tones', 'Ivory / Modern Monochrome'].map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => handleSelectOption('gownColor', opt)}
+                        className="p-3.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] hover:border-[#9c4221] text-xs font-semibold text-[#1b1815] text-left transition-all cursor-pointer"
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Coverage */}
+              {step === 3 && (
+                <div className="space-y-3">
+                  <h4 className="font-serif-editorial text-xl font-bold text-[#1b1815]">What level of skin coverage do you desire?</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {['Full Elbows & Mid-Calf Legs', 'Palms to Forearms + Feet Ankle', 'Delicate Palm Cuffs & Back of Hands', 'Minimalist Ring & Finger Accents'].map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => handleSelectOption('coverage', opt)}
+                        className="p-3.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] hover:border-[#9c4221] text-xs font-semibold text-[#1b1815] text-left transition-all cursor-pointer"
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Intricacy */}
+              {step === 4 && (
+                <div className="space-y-3">
+                  <h4 className="font-serif-editorial text-xl font-bold text-[#1b1815]">What density of motifs do you favor?</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {['Dense Heirloom Figurine Symmetry', 'Open Khaleeji Negative-Space Florals', 'Geometric Mughal Jaal Architecture', 'Micro-Mandala Minimalist Dotwork'].map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => handleSelectOption('intricacy', opt)}
+                        className="p-3.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] hover:border-[#9c4221] text-xs font-semibold text-[#1b1815] text-left transition-all cursor-pointer"
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
             </div>
           )}
+
         </div>
 
       </div>
+
     </div>
   );
 };

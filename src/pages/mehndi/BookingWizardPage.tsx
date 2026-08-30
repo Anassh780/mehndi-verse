@@ -2,530 +2,420 @@ import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   Check, 
-  ArrowRight, 
-  ArrowLeft, 
-  Clock, 
   Calendar, 
+  Clock, 
   MapPin, 
+  User, 
   ShieldCheck, 
-  Sparkles, 
   CreditCard, 
+  Sparkles, 
+  ArrowLeft, 
+  ArrowRight,
+  CheckCircle2,
   Printer
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import { MOCK_ARTISTS, STANDARD_ADDONS } from '@/services/mehndiData';
 import { useBooking } from '@/context/BookingContext';
-import { useMehndiAuth } from '@/context/MehndiAuthContext';
-import { ServicePackage, AddOnOption, Booking } from '@/types/mehndi';
+import { MOCK_ARTISTS, STANDARD_ADDONS } from '@/services/mehndiData';
+import confetti from 'canvas-confetti';
 
 export const BookingWizardPage: React.FC = () => {
-  const { artistId } = useParams<{ artistId: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useMehndiAuth();
   const { 
-    draft,
-    step,
-    confirmedBooking,
-    selectArtistAndPackage,
-    toggleAddOn,
-    updateDraft,
-    nextStep,
-    prevStep,
-    calculateTotal,
-    submitBooking,
-    resetBookingFlow
+    draft, 
+    step, 
+    confirmedBooking, 
+    selectArtistAndPackage, 
+    toggleAddOn, 
+    updateDraft, 
+    nextStep, 
+    prevStep, 
+    calculateTotal, 
+    submitBooking, 
+    resetBookingFlow 
   } = useBooking();
 
+  const artist = draft.artist || MOCK_ARTISTS.find((a) => a.id === id) || MOCK_ARTISTS[0];
+
+  const [date, setDate] = useState(draft.eventDate || '2026-09-15');
+  const [time, setTime] = useState(draft.eventTime || '10:00 AM');
+  const [eventType, setEventType] = useState(draft.eventType || 'Wedding');
+  const [venue, setVenue] = useState(draft.venueAddress || 'Palace Downtown, Suite 402, Dubai');
+  const [name, setName] = useState(draft.customerName || 'Suhana Patel');
+  const [email, setEmail] = useState(draft.customerEmail || 'suhana.patel@gmail.com');
+  const [phone, setPhone] = useState(draft.customerPhone || '+1 (555) 234-5678');
+  const [notes, setNotes] = useState(draft.specialNotes || 'Please incorporate groom initials into palm design.');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Initialize artist if none selected or if URL parameter provided
-  React.useEffect(() => {
-    if (artistId && (!draft.artist || draft.artist.id !== artistId)) {
-      const found = MOCK_ARTISTS.find(a => a.id === artistId);
-      if (found) {
-        selectArtistAndPackage(found, found.packages[1] || found.packages[0]);
-      }
-    } else if (!draft.artist) {
-      selectArtistAndPackage(MOCK_ARTISTS[0], MOCK_ARTISTS[0].packages[1] || MOCK_ARTISTS[0].packages[0]);
-    }
-  }, [artistId, draft.artist]);
+  const { total, deposit } = calculateTotal();
 
-  const pricing = calculateTotal();
+  const handlePackagePick = (pkg: any) => {
+    selectArtistAndPackage(artist, pkg);
+    nextStep();
+  };
 
-  if (!draft.artist) {
-    return (
-      <div className="min-h-[50vh] flex items-center justify-center">
-        <p className="text-xs text-[#6B665F]">Loading atelier booking session...</p>
-      </div>
-    );
-  }
+  const handleStep2Submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateDraft({ eventDate: date, eventTime: time, eventType });
+    nextStep();
+  };
 
-  const handleFinalPayment = async (e: React.FormEvent) => {
+  const handleStep3Submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateDraft({
+      customerName: name,
+      customerEmail: email,
+      customerPhone: phone,
+      venueAddress: venue,
+      specialNotes: notes
+    });
+    nextStep();
+  };
+
+  const handleFinalAuthorize = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    try {
-      await submitBooking();
-      confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
-    } catch (err) {
-      console.error(err);
-    } finally {
+    setTimeout(() => {
+      submitBooking();
       setIsSubmitting(false);
-    }
+      try {
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+      } catch (err) {}
+    }, 900);
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 pb-32">
       
-      {/* Wizard Header */}
-      {!confirmedBooking && (
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8E5A3C] block">
-            Date & Commission Reservation
-          </span>
-          <h1 className="font-serif-editorial text-3xl sm:text-4xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-            Reserve Your Bridal Session
-          </h1>
-          <p className="text-xs text-[#6B665F] dark:text-[#A8A298]">
-            Master Artisan: <strong className="text-[#1C1A18] dark:text-[#F7F5F0]">{draft.artist.name}</strong> · {draft.artist.city}
-          </p>
+      {/* Editorial Header */}
+      <div className="space-y-2 text-center">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#9c4221] block">
+          Bridal Atelier Commission Protocol
+        </span>
+        <h1 className="font-serif-editorial text-3xl sm:text-4xl font-bold text-[#1b1815]">
+          Reserve Your Wedding Session
+        </h1>
+        <p className="text-xs text-[#2c2620]/75">
+          Commissioning <strong>{artist.name}</strong> · 100% Escrow Protected Booking
+        </p>
+      </div>
 
-          {/* Clean Stepper */}
-          <div className="flex items-center justify-center gap-2 pt-4">
-            {[
-              { num: 1, label: 'Package' },
-              { num: 2, label: 'Schedule' },
-              { num: 3, label: 'Details' },
-              { num: 4, label: 'Deposit' },
-            ].map((st) => (
-              <React.Fragment key={st.num}>
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className={`w-6 h-6 rounded-full text-[11px] font-bold flex items-center justify-center transition-colors ${
-                      step === st.num
-                        ? 'bg-[#1C1A18] text-white dark:bg-white dark:text-black'
-                        : step > st.num
-                        ? 'bg-[#385648] text-white'
-                        : 'border border-[#E8E2D9] text-[#9E988F]'
-                    }`}
-                  >
-                    {step > st.num ? <Check className="w-3.5 h-3.5" /> : st.num}
-                  </div>
-                  <span className="text-xs font-medium text-[#6B665F] hidden sm:inline">{st.label}</span>
-                </div>
-                {st.num < 4 && <div className="w-8 h-[1px] bg-[#E8E2D9] dark:bg-[#2A2724]" />}
-              </React.Fragment>
-            ))}
+      {/* 4-Step Progress Indicator */}
+      <div className="grid grid-cols-4 gap-2 pt-2">
+        {[
+          { num: 1, label: 'Tier & Add-Ons' },
+          { num: 2, label: 'Date & Time' },
+          { num: 3, label: 'Venue Specs' },
+          { num: 4, label: 'Escrow Lock' },
+        ].map((s) => (
+          <div key={s.num} className="space-y-1.5 text-center">
+            <div
+              className={`h-1.5 rounded-full transition-colors ${
+                step >= s.num ? 'bg-[#9c4221]' : 'bg-[rgba(27,24,21,0.12)]'
+              }`}
+            />
+            <span className={`text-[10px] uppercase font-bold tracking-wider hidden sm:block ${
+              step >= s.num ? 'text-[#1b1815]' : 'text-[#2c2620]/50'
+            }`}>
+              {s.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* CONFIRMATION SCREEN (STEP 5) */}
+      {confirmedBooking && (
+        <div className="card rounded-3xl p-8 sm:p-12 text-center space-y-6 bg-[#f7f1e6] border border-[rgba(27,24,21,0.12)] shadow-xl animate-in zoom-in-95 duration-300">
+          <div className="w-16 h-16 rounded-full bg-[#efe6d4] text-[#6b7752] mx-auto flex items-center justify-center border border-[rgba(27,24,21,0.12)]">
+            <CheckCircle2 className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-2">
+            <span className="badge">
+              <span>Escrow Deposit Confirmed</span>
+            </span>
+            <h2 className="font-serif-editorial text-3xl font-bold text-[#1b1815]">
+              Your Bridal Date is Locked
+            </h2>
+            <p className="text-xs text-[#2c2620]/80 max-w-md mx-auto leading-relaxed">
+              Voucher <strong>#{confirmedBooking.bookingNumber}</strong> has been issued. {artist.name} has been notified and will prepare custom sketches for your wedding date.
+            </p>
+          </div>
+
+          <div className="max-w-md mx-auto p-5 rounded-2xl bg-[#efe6d4] border border-[rgba(27,24,21,0.1)] text-xs space-y-2 text-left">
+            <div className="flex justify-between">
+              <span className="text-[#2c2620]/70">Package Tier:</span>
+              <span className="font-bold text-[#1b1815]">{confirmedBooking.packageName}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-[#2c2620]/70">Ceremony Date:</span>
+              <span className="font-bold text-[#1b1815]">{confirmedBooking.eventDate} ({confirmedBooking.eventTime})</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-[#2c2620]/70">Venue:</span>
+              <span className="font-bold text-[#1b1815] truncate max-w-[200px]">{confirmedBooking.venueAddress}</span>
+            </div>
+            <div className="flex justify-between pt-2 border-t border-[rgba(27,24,21,0.1)]">
+              <span className="text-[#2c2620]/70">Escrow Deposit Paid:</span>
+              <span className="font-bold text-[#6b7752]">${confirmedBooking.depositAmount} USD</span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3 pt-4">
+            <button
+              onClick={() => window.print()}
+              className="btn btn-ghost !py-2.5 !px-5 !text-xs flex items-center gap-2"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Print Voucher</span>
+            </button>
+            <Link
+              to="/customer-dashboard"
+              className="btn btn-primary !py-2.5 !px-6 !text-xs"
+            >
+              <span>Go to Bridal Portal</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       )}
 
-      {/* Confirmation Screen */}
-      {confirmedBooking ? (
-        <div className="max-w-2xl mx-auto editorial-card rounded-2xl p-8 sm:p-12 text-center space-y-6 animate-in fade-in duration-200">
-          
-          <div className="w-16 h-16 rounded-full bg-[#EEF4F0] text-[#385648] flex items-center justify-center mx-auto border border-[#C8DBD0]">
-            <Check className="w-8 h-8" />
+      {/* STEP 1: PACKAGE & ADD-ONS */}
+      {!confirmedBooking && step === 1 && (
+        <div className="space-y-6">
+          <div className="space-y-1">
+            <h3 className="font-serif-editorial text-2xl font-bold text-[#1b1815]">Select Bridal Package Tier</h3>
+            <p className="text-xs text-[#2c2620]/75">Choose your desired level of skin coverage and figurative intricacy.</p>
           </div>
 
-          <div className="space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#8E5A3C]">
-              Booking Confirmed & Escrow Protected
-            </span>
-            <h2 className="font-serif-editorial text-3xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-              Your Bridal Date is Secured
-            </h2>
-            <p className="text-xs text-[#6B665F] dark:text-[#A8A298]">
-              Confirmation voucher <strong>{confirmedBooking.bookingNumber || confirmedBooking.id}</strong> has been issued to {confirmedBooking.customerEmail || 'your email'}.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {artist.packages.map((pkg) => {
+              const isSelected = draft.selectedPackage?.id === pkg.id;
+              return (
+                <div
+                  key={pkg.id}
+                  onClick={() => selectArtistAndPackage(artist, pkg)}
+                  className={`card p-5 rounded-2xl cursor-pointer transition-all space-y-3 ${
+                    isSelected
+                      ? 'bg-[#efe6d4] border-[#9c4221] ring-1 ring-[#9c4221]'
+                      : 'bg-[#f7f1e6] border-[rgba(27,24,21,0.12)]'
+                  }`}
+                >
+                  <div className="flex justify-between items-start">
+                    <h4 className="font-serif-editorial font-bold text-lg text-[#1b1815]">{pkg.title}</h4>
+                    {isSelected && <Check className="w-4 h-4 text-[#9c4221]" />}
+                  </div>
+                  <p className="font-serif-editorial text-2xl font-bold text-[#1b1815]">${pkg.price}</p>
+                  <p className="text-xs text-[#2c2620]/75">{pkg.description}</p>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Booking Summary Box */}
-          <div className="p-6 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] text-left text-xs space-y-3">
-            <div className="flex justify-between py-1 border-b border-[#F0EAE1]">
-              <span className="text-[#6B665F]">Master Artisan:</span>
-              <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{confirmedBooking.artistName}</span>
-            </div>
-            <div className="flex justify-between py-1 border-b border-[#F0EAE1]">
-              <span className="text-[#6B665F]">Ceremony Date:</span>
-              <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{confirmedBooking.eventDate} ({confirmedBooking.eventTime})</span>
-            </div>
-            <div className="flex justify-between py-1 border-b border-[#F0EAE1]">
-              <span className="text-[#6B665F]">Selected Tier:</span>
-              <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{confirmedBooking.packageName}</span>
-            </div>
-            <div className="flex justify-between py-1 border-b border-[#F0EAE1]">
-              <span className="text-[#6B665F]">Venue Location:</span>
-              <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{confirmedBooking.venueAddress}</span>
-            </div>
-            <div className="flex justify-between pt-2">
-              <span className="text-[#6B665F]">25% Escrow Deposit Paid:</span>
-              <span className="font-bold text-[#385648] dark:text-[#5E8C75]">${confirmedBooking.depositAmount} USD</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-            <button
-              onClick={() => window.print()}
-              className="btn-secondary w-full sm:w-auto"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print Invoice Voucher</span>
-            </button>
-            <Link
-              to="/customer-dashboard"
-              className="btn-primary w-full sm:w-auto"
-            >
-              <span>View in My Appointments</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-        </div>
-      ) : (
-        /* Wizard Steps Grid */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Main Step Form (Left 8 Cols) */}
-          <div className="lg:col-span-8 editorial-card rounded-2xl p-6 sm:p-8 space-y-6">
-            
-            {/* STEP 1: SELECT PACKAGE & ADD-ONS */}
-            {step === 1 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                    Select Commission Package
-                  </h3>
-                  <p className="text-xs text-[#6B665F]">Choose the baseline coverage for your ceremony.</p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {draft.artist.packages.map((pkg: ServicePackage) => (
-                    <div
-                      key={pkg.id}
-                      onClick={() => selectArtistAndPackage(draft.artist!, pkg)}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                        draft.selectedPackage?.id === pkg.id
-                          ? 'border-[#1C1A18] dark:border-[#F7F5F0] bg-[#FAF8F5] dark:bg-[#1C1A18] shadow-xs'
-                          : 'border-[#E8E2D9] dark:border-[#2A2724] hover:border-gray-400'
-                      }`}
-                    >
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E5A3C] block mb-1">
-                        {pkg.tier}
-                      </span>
-                      <p className="font-serif-editorial text-base font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                        {pkg.title}
-                      </p>
-                      <p className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0] my-2">
-                        ${pkg.price}
-                      </p>
-                      <p className="text-[11px] text-[#6B665F] line-clamp-2">{pkg.description}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Add-ons */}
-                <div className="space-y-3 pt-6 border-t border-[#F0EAE1] dark:border-[#2A2724]">
-                  <h4 className="font-serif-editorial text-lg font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                    Optional Bridal Add-ons
-                  </h4>
-                  <div className="space-y-2">
-                    {STANDARD_ADDONS.map((addon: AddOnOption) => {
-                      const isSelected = draft.selectedAddOns.some((a: AddOnOption) => a.id === addon.id);
-                      return (
-                        <div
-                          key={addon.id}
-                          onClick={() => toggleAddOn(addon)}
-                          className={`p-3.5 rounded-xl border cursor-pointer flex items-center justify-between transition-all ${
-                            isSelected
-                              ? 'border-[#1C1A18] dark:border-[#F7F5F0] bg-[#FAF8F5] dark:bg-[#1C1A18]'
-                              : 'border-[#E8E2D9] dark:border-[#2A2724]'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${isSelected ? 'bg-[#1C1A18] text-white' : 'border-[#D1C9BC]'}`}>
-                              {isSelected && <Check className="w-3 h-3" />}
-                            </div>
-                            <div>
-                              <p className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{addon.title}</p>
-                              <p className="text-[11px] text-[#6B665F]">{addon.description}</p>
-                            </div>
-                          </div>
-                          <span className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">+${addon.price}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <button onClick={nextStep} className="btn-primary">
-                    <span>Continue to Schedule</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 2: DATE & TIME */}
-            {step === 2 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                    Select Ceremony Date & Time
-                  </h3>
-                  <p className="text-xs text-[#6B665F]">Choose the date for your bridal application session.</p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] block">
-                      Ceremony Date
-                    </label>
-                    <input
-                      type="date"
-                      required
-                      value={draft.eventDate}
-                      onChange={(e) => updateDraft({ eventDate: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] text-xs text-[#1C1A18] dark:text-[#F7F5F0] bg-white dark:bg-[#141312] focus:outline-none focus:border-[#1C1A18]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] block">
-                      Preferred Start Time
-                    </label>
-                    <select
-                      value={draft.eventTime}
-                      onChange={(e) => updateDraft({ eventTime: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] text-xs text-[#1C1A18] dark:text-[#F7F5F0] bg-white dark:bg-[#141312] focus:outline-none focus:border-[#1C1A18]"
-                    >
-                      <option value="10:00 AM">10:00 AM (Morning Session)</option>
-                      <option value="02:00 PM">02:00 PM (Afternoon Session)</option>
-                      <option value="06:00 PM">06:00 PM (Evening Sangeet Session)</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#EEF4F0] border border-[#C8DBD0] text-xs text-[#385648] flex items-center gap-3">
-                  <ShieldCheck className="w-5 h-5 shrink-0" />
-                  <span>Pro Tip: Schedule application 48 hours before your main reception for peak mahogany color.</span>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <button onClick={prevStep} className="btn-secondary">
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Back</span>
-                  </button>
-                  <button onClick={nextStep} className="btn-primary">
-                    <span>Continue to Venue Details</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 3: VENUE & CONTACT */}
-            {step === 3 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                    Venue & Contact Details
-                  </h3>
-                  <p className="text-xs text-[#6B665F]">Where will the artist travel to for the commission?</p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2 sm:col-span-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] block">
-                      Venue / Hotel Suite Address
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Burj Al Arab Suite 402, Jumeirah, Dubai"
-                      value={draft.venueAddress}
-                      onChange={(e) => updateDraft({ venueAddress: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] text-xs text-[#1C1A18] dark:text-[#F7F5F0] bg-white dark:bg-[#141312] focus:outline-none focus:border-[#1C1A18]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] block">
-                      Contact Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Bride or Planner Name"
-                      value={draft.customerName || user?.name || ''}
-                      onChange={(e) => updateDraft({ customerName: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] text-xs text-[#1C1A18] dark:text-[#F7F5F0] bg-white dark:bg-[#141312] focus:outline-none focus:border-[#1C1A18]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] block">
-                      Phone / WhatsApp
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="+971 50 123 4567"
-                      value={draft.customerPhone}
-                      onChange={(e) => updateDraft({ customerPhone: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] text-xs text-[#1C1A18] dark:text-[#F7F5F0] bg-white dark:bg-[#141312] focus:outline-none focus:border-[#1C1A18]"
-                    />
-                  </div>
-
-                  <div className="space-y-2 sm:col-span-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] block">
-                      Special Requests / Hidden Initials
-                    </label>
-                    <textarea
-                      rows={3}
-                      placeholder="Any specific motifs, couple initials, portrait requests, or skin sensitivities..."
-                      value={draft.specialNotes}
-                      onChange={(e) => updateDraft({ specialNotes: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] text-xs text-[#1C1A18] dark:text-[#F7F5F0] bg-white dark:bg-[#141312] focus:outline-none focus:border-[#1C1A18]"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <button onClick={prevStep} className="btn-secondary">
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Back</span>
-                  </button>
-                  <button onClick={nextStep} className="btn-primary">
-                    <span>Continue to Escrow Deposit</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 4: PAYMENT & DEPOSIT */}
-            {step === 4 && (
-              <form onSubmit={handleFinalPayment} className="space-y-6">
-                <div>
-                  <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-                    25% Escrow Date Deposit
-                  </h3>
-                  <p className="text-xs text-[#6B665F]">Your date is reserved immediately. Balance due on ceremony day.</p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] space-y-3">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-[#6B665F]">Package Baseline:</span>
-                    <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">${pricing.packagePrice} USD</span>
-                  </div>
-                  {pricing.addOnsTotal > 0 && (
-                    <div className="flex justify-between text-xs">
-                      <span className="text-[#6B665F]">Add-ons Total:</span>
-                      <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">+${pricing.addOnsTotal} USD</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-xs pt-2 border-t border-[#E8E2D9]">
-                    <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">Total Commission:</span>
-                    <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">${pricing.total} USD</span>
-                  </div>
-                  <div className="flex justify-between text-sm font-bold text-[#385648] dark:text-[#5E8C75] pt-2 border-t border-[#E8E2D9]">
-                    <span>25% Escrow Deposit Due Now:</span>
-                    <span>${pricing.deposit} USD</span>
-                  </div>
-                </div>
-
-                {/* Payment Selection */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] block">
-                    Payment Method
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => updateDraft({ paymentMethod: 'card' })}
-                      className={`p-3.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 ${
-                        draft.paymentMethod === 'card' ? 'border-[#1C1A18] bg-white dark:bg-[#1C1A18]' : 'border-[#E8E2D9]'
-                      }`}
-                    >
-                      <CreditCard className="w-4 h-4" />
-                      <span>Credit Card</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => updateDraft({ paymentMethod: 'upi' })}
-                      className={`p-3.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 ${
-                        draft.paymentMethod === 'upi' ? 'border-[#1C1A18] bg-white dark:bg-[#1C1A18]' : 'border-[#E8E2D9]'
-                      }`}
-                    >
-                      <span>UPI / Wire / Cash</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <button type="button" onClick={prevStep} className="btn-secondary">
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Back</span>
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-primary !py-3 !px-8"
+          {/* Add-Ons */}
+          <div className="space-y-3 pt-4 border-t border-[rgba(27,24,21,0.1)]">
+            <h4 className="font-serif-editorial text-lg font-bold text-[#1b1815]">Optional Botanical Add-Ons</h4>
+            <div className="space-y-2">
+              {STANDARD_ADDONS.map((addon) => {
+                const isSelected = draft.selectedAddOns.some(a => a.id === addon.id);
+                return (
+                  <div
+                    key={addon.id}
+                    onClick={() => toggleAddOn(addon)}
+                    className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer text-xs transition-all ${
+                      isSelected ? 'border-[#9c4221] bg-[#efe6d4]' : 'border-[rgba(27,24,21,0.12)] bg-[#f7f1e6]'
+                    }`}
                   >
-                    <span>{isSubmitting ? 'Securing Slot...' : `Authorize $${pricing.deposit} Deposit`}</span>
-                  </button>
-                </div>
-              </form>
-            )}
-
+                    <div>
+                      <p className="font-bold text-[#1b1815]">{addon.title}</p>
+                      <p className="text-[11px] text-[#2c2620]/70">{addon.description}</p>
+                    </div>
+                    <span className="font-bold text-[#9c4221]">+${addon.price}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Sidebar Summary (Right 4 Cols) */}
-          <div className="lg:col-span-4 p-6 rounded-2xl bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] shadow-xs space-y-6 sticky top-24">
-            <div className="flex items-center gap-3 pb-4 border-b border-[#F0EAE1] dark:border-[#2A2724]">
-              <img
-                src={draft.artist.avatar}
-                alt={draft.artist.name}
-                className="w-12 h-12 rounded-full object-cover border border-[#E8E2D9]"
+          <div className="flex justify-end pt-4">
+            <button onClick={nextStep} className="btn btn-primary">
+              <span>Continue to Schedule</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 2: DATE & TIME */}
+      {!confirmedBooking && step === 2 && (
+        <form onSubmit={handleStep2Submit} className="space-y-6">
+          <div className="space-y-1">
+            <h3 className="font-serif-editorial text-2xl font-bold text-[#1b1815]">Ceremony Schedule</h3>
+            <p className="text-xs text-[#2c2620]/75">Select the ideal date for your bridal session.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="space-y-1">
+              <label className="font-bold uppercase tracking-wider block text-[#1b1815]">Event Date</label>
+              <input
+                type="date"
+                required
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815] focus:outline-none focus:border-[#9c4221]"
               />
-              <div>
-                <p className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{draft.artist.name}</p>
-                <p className="text-[11px] text-[#6B665F]">{draft.artist.city} · {draft.artist.rating} ★</p>
-              </div>
             </div>
 
-            <div className="space-y-3 text-xs">
-              <div className="flex justify-between">
-                <span className="text-[#6B665F]">Tier:</span>
-                <span className="font-semibold text-[#1C1A18] dark:text-[#F7F5F0]">{draft.selectedPackage?.title}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#6B665F]">Date:</span>
-                <span className="font-semibold text-[#1C1A18] dark:text-[#F7F5F0]">{draft.eventDate}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#6B665F]">Duration:</span>
-                <span className="font-semibold text-[#1C1A18] dark:text-[#F7F5F0]">~{Math.round((draft.selectedPackage?.durationMinutes || 240) / 60)} hrs</span>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-[#385648] dark:text-[#5E8C75] font-bold">
-                <ShieldCheck className="w-4 h-4" />
-                <span>Escrow Date Guarantee</span>
-              </div>
-              <p className="text-[11px] text-[#6B665F] leading-relaxed">
-                Deposit remains protected until artist arrives on ceremony day. 100% natural organic henna cones included.
-              </p>
+            <div className="space-y-1">
+              <label className="font-bold uppercase tracking-wider block text-[#1b1815]">Session Start Time</label>
+              <select
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815] focus:outline-none focus:border-[#9c4221]"
+              >
+                <option value="09:00 AM">09:00 AM (Morning Session)</option>
+                <option value="12:00 PM">12:00 PM (Midday Session)</option>
+                <option value="03:00 PM">03:00 PM (Afternoon Session)</option>
+                <option value="06:00 PM">06:00 PM (Evening Sangeet)</option>
+              </select>
             </div>
           </div>
 
+          <div className="flex justify-between pt-4">
+            <button type="button" onClick={prevStep} className="btn btn-ghost">
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back</span>
+            </button>
+            <button type="submit" className="btn btn-primary">
+              <span>Continue to Venue</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* STEP 3: VENUE & CONTACT */}
+      {!confirmedBooking && step === 3 && (
+        <form onSubmit={handleStep3Submit} className="space-y-6">
+          <div className="space-y-1">
+            <h3 className="font-serif-editorial text-2xl font-bold text-[#1b1815]">Venue & Bridal Details</h3>
+            <p className="text-xs text-[#2c2620]/75">Where will the artist travel for your session?</p>
+          </div>
+
+          <div className="space-y-4 text-xs">
+            <div className="space-y-1">
+              <label className="font-bold uppercase tracking-wider block text-[#1b1815]">Full Name</label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815]"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="font-bold uppercase tracking-wider block text-[#1b1815]">Email Address</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815]"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="font-bold uppercase tracking-wider block text-[#1b1815]">Phone Number</label>
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-bold uppercase tracking-wider block text-[#1b1815]">Venue / Suite Address</label>
+              <input
+                type="text"
+                required
+                value={venue}
+                onChange={(e) => setVenue(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815]"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-bold uppercase tracking-wider block text-[#1b1815]">Special Motif Notes / Initials</label>
+              <textarea
+                rows={3}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815]"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-between pt-4">
+            <button type="button" onClick={prevStep} className="btn btn-ghost">
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back</span>
+            </button>
+            <button type="submit" className="btn btn-primary">
+              <span>Review & Escrow Lock</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* STEP 4: ESCROW AUTHORIZE */}
+      {!confirmedBooking && step === 4 && (
+        <div className="space-y-6">
+          <div className="space-y-1">
+            <h3 className="font-serif-editorial text-2xl font-bold text-[#1b1815]">Authorize Escrow Deposit</h3>
+            <p className="text-xs text-[#2c2620]/75">Your 25% deposit is held in escrow until your bridal session completes.</p>
+          </div>
+
+          {/* Breakdown Card */}
+          <div className="p-6 rounded-2xl bg-[#efe6d4] border border-[rgba(27,24,21,0.12)] space-y-3 text-xs">
+            <div className="flex justify-between">
+              <span className="text-[#2c2620]/70">Package ({draft.selectedPackage?.title}):</span>
+              <span className="font-bold text-[#1b1815]">${draft.selectedPackage?.price} USD</span>
+            </div>
+            {draft.selectedAddOns.map(a => (
+              <div key={a.id} className="flex justify-between">
+                <span className="text-[#2c2620]/70">+ {a.title}:</span>
+                <span className="font-bold text-[#1b1815]">${a.price} USD</span>
+              </div>
+            ))}
+            <div className="pt-2 border-t border-[rgba(27,24,21,0.1)] flex justify-between text-sm">
+              <span className="font-bold text-[#1b1815]">Total Commission:</span>
+              <span className="font-serif-editorial font-bold text-lg text-[#1b1815]">${total} USD</span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#f7f1e6] border border-[rgba(27,24,21,0.1)] flex justify-between font-bold">
+              <span className="text-[#9c4221]">25% Escrow Deposit Due Now:</span>
+              <span className="text-[#9c4221]">${deposit} USD</span>
+            </div>
+          </div>
+
+          <div className="flex justify-between pt-4">
+            <button type="button" onClick={prevStep} className="btn btn-ghost">
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back</span>
+            </button>
+            <button
+              onClick={handleFinalAuthorize}
+              disabled={isSubmitting}
+              className="btn btn-primary !py-3 !px-8"
+            >
+              <span>{isSubmitting ? 'Locking Escrow...' : `Authorize $${deposit} Deposit`}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       )}
 

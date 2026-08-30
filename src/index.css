@@ -1,86 +1,99 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    /* Editorial Neutral System */
-    --bg: #FAF8F5;
-    --surface: #FFFFFF;
-    --surface-alt: #F4EFEB;
-    --surface-card: #FFFFFF;
-    
-    /* Inks */
-    --ink: #1C1A18;
-    --ink-muted: #6B665F;
-    --ink-subtle: #9E988F;
-    
-    /* Single Considered Accent: Antique Umber / Warm Ochre */
-    --accent: #8E5A3C;
-    --accent-light: #F6EDE7;
-    --accent-border: #DBC8BC;
-    
-    /* Supporting State Tone: Muted Botanical Sage */
-    --sage: #385648;
-    --sage-bg: #EEF4F0;
-    --sage-border: #C8DBD0;
-    
-    /* Hairlines */
-    --border: #E8E2D9;
-    --border-subtle: #F0EAE1;
-    
-    /* Shadows */
-    --shadow-soft: 0 4px 20px -2px rgba(28, 26, 24, 0.03), 0 2px 6px -1px rgba(28, 26, 24, 0.02);
-    --shadow-hover: 0 12px 30px -4px rgba(28, 26, 24, 0.06), 0 4px 10px -2px rgba(28, 26, 24, 0.03);
+/* ==========================================================================
+   Zari & Henna — UI Motion & Component System
+   A restrained, brand-specific set of button, card, form, and motion
+   patterns. The signature interaction is the "bloom": primary actions
+   darken like henna oxidizing, and presses release a stain-colored
+   ripple from the point of contact.
+   ========================================================================== */
 
-    /* Fonts */
-    --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
-    --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
+:root {
+  /* Color — grounded in the actual material: henna stain, henna paste,
+     ink, and undyed cloth. No default AI-template clay or neon-on-black. */
+  --ink: #1b1815;
+  --ink-soft: #2c2620;
+  --ivory: #f7f1e6;
+  --ivory-soft: #efe6d4;
+  --henna: #9c4221;        /* dried henna stain — primary accent */
+  --henna-deep: #7a331a;   /* stain after it oxidizes/deepens */
+  --henna-veil: rgba(156, 66, 33, 0.16);
+  --paste: #6b7752;        /* fresh henna paste — secondary accent */
+  --gold: #c9a227;         /* worn only by verified/premium markers */
+  --line: rgba(27, 24, 21, 0.12);
 
-  html.dark,
-  .dark {
-    /* Editorial Dark Palette (Deep Charcoal / Noir Warm) */
-    --bg: #141312;
-    --surface: #1C1A18;
-    --surface-alt: #23211E;
-    --surface-card: #1C1A18;
-    
-    --ink: #F7F5F0;
-    --ink-muted: #A8A298;
-    --ink-subtle: #6E6860;
-    
-    --accent: #D4A373;
-    --accent-light: #2A2118;
-    --accent-border: #4A3A2C;
-    
-    --sage: #5E8C75;
-    --sage-bg: #192520;
-    --sage-border: #283C33;
-    
-    --border: #2A2724;
-    --border-subtle: #1F1D1A;
-    
-    --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
-    --shadow-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.5);
-  }
+  /* Theme mappings */
+  --bg: #f7f1e6;
+  --surface: #ffffff;
+  --surface-card: #f7f1e6;
+
+  /* Type */
+  --font-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-base: 280ms;
+  --dur-slow: 450ms;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-full: 999px;
+}
+
+.dark {
+  --ink: #f7f1e6;
+  --ink-soft: #d8cebe;
+  --ivory: #1b1815;
+  --ivory-soft: #26221d;
+  --henna: #e06c43;
+  --henna-deep: #c45228;
+  --henna-veil: rgba(224, 108, 67, 0.2);
+  --paste: #8b9a6d;
+  --gold: #dfb841;
+  --line: rgba(247, 241, 230, 0.14);
+  --bg: #141210;
+  --surface: #1b1815;
+  --surface-card: #1b1815;
 }
 
 @theme {
-  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-serif: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --font-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-heading: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --color-ink: #1b1815;
+  --color-ink-soft: #2c2620;
+  --color-ivory: #f7f1e6;
+  --color-ivory-soft: #efe6d4;
+  --color-henna: #9c4221;
+  --color-henna-deep: #7a331a;
+  --color-paste: #6b7752;
+  --color-gold: #c9a227;
+}
+
+/* Respect the person's OS motion setting before anything else. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Global Reset */
 html {
   scroll-behavior: smooth;
-  background-color: var(--bg);
+  background-color: var(--ivory);
   color: var(--ink);
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: var(--bg);
+  font-family: var(--font-body);
+  background-color: var(--ivory);
   color: var(--ink);
   line-height: 1.6;
   letter-spacing: -0.01em;
@@ -91,150 +104,281 @@ body {
   overflow-x: hidden;
 }
 
-/* Editorial Serif & Sans Classes */
+/* Editorial Typography */
 .font-serif-editorial {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   letter-spacing: -0.02em;
 }
 
 .font-sans-editorial {
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
-/* Restrained Button Architecture */
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.85em 1.6em;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform var(--dur-fast) var(--ease-out-expo),
+              box-shadow var(--dur-base) var(--ease-out-expo),
+              background-color var(--dur-base) var(--ease-out-expo),
+              border-color var(--dur-base) var(--ease-out-expo),
+              color var(--dur-base) var(--ease-out-expo);
+  text-decoration: none;
+}
+
+.btn:active { transform: scale(0.97); }
+
+/* The bloom: a stain-colored ripple that expands from the click point. */
+.btn::after {
+  content: '';
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(247, 241, 230, 0.55) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn.is-blooming::after {
+  animation: bloom 600ms var(--ease-out-expo);
+}
+
+@keyframes bloom {
+  0%   { transform: translate(-50%, -50%) scale(0);  opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(22); opacity: 0; }
+}
+
 .btn-primary {
-  background-color: #1C1A18;
-  color: #FAF8F5;
-  border: 1px solid #1C1A18;
-  padding: 0.75rem 1.75rem;
+  background: var(--henna);
+  color: var(--ivory);
+}
+.btn-primary:hover { background: var(--henna-deep); box-shadow: 0 6px 20px -8px var(--henna-deep); }
+
+.btn-ink {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.btn-ink:hover { background: var(--ink-soft); box-shadow: 0 6px 20px -8px rgba(27,24,21,0.5); }
+
+.btn-ghost, .btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+}
+.btn-ghost:hover, .btn-secondary:hover { border-color: var(--henna); color: var(--henna-deep); background: var(--henna-veil); }
+
+.btn-icon {
+  padding: 0.7em;
+  border-radius: var(--radius-full);
+  background: var(--ivory-soft);
+  color: var(--ink);
+}
+.btn-icon:hover { background: var(--henna-veil); color: var(--henna-deep); }
+
+.btn:focus-visible,
+.field input:focus-visible,
+.switch input:focus-visible + .track {
+  outline: 2px solid var(--henna);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+
+.card, .editorial-card {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform var(--dur-base) var(--ease-out-expo),
+              box-shadow var(--dur-base) var(--ease-out-expo),
+              border-color var(--dur-base) var(--ease-out-expo);
+}
+.card:hover, .editorial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 35px -20px rgba(27, 24, 21, 0.25);
+  border-color: var(--henna-veil);
+}
+
+/* Loading skeleton */
+.card-skeleton {
+  background: linear-gradient(100deg, var(--ivory-soft) 30%, #fff 50%, var(--ivory-soft) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 120% 0; }
+  100% { background-position: -20% 0; }
+}
+
+/* ==========================================================================
+   Form fields — floating label, ink-bloom focus ring
+   ========================================================================== */
+
+.field {
+  position: relative;
+}
+.field input, .field textarea, .field select {
+  width: 100%;
+  padding: 1.2em 1em 0.5em;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--ivory-soft);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: border-color var(--dur-base) var(--ease-out-expo),
+              box-shadow var(--dur-base) var(--ease-out-expo);
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: none;
+  border-color: var(--henna);
+  box-shadow: 0 0 0 4px var(--henna-veil);
+}
+.field label {
+  position: absolute;
+  left: 1em;
+  top: 1em;
+  color: rgba(27, 24, 21, 0.55);
+  font-size: 0.95rem;
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform var(--dur-fast) var(--ease-out-expo),
+              color var(--dur-fast) var(--ease-out-expo);
+}
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field textarea:focus + label,
+.field textarea:not(:placeholder-shown) + label {
+  transform: translateY(-0.65em) scale(0.78);
+  color: var(--henna-deep);
+}
+
+/* ==========================================================================
+   Toggle switch
+   ========================================================================== */
+
+.switch { display: inline-flex; align-items: center; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.switch .track {
+  width: 44px;
+  height: 26px;
+  background: var(--ivory-soft);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: background var(--dur-base) var(--ease-out-expo);
+}
+.switch .track::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 19px;
+  height: 19px;
+  background: var(--ivory);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(27,24,21,0.3);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+.switch input:checked + .track { background: var(--henna); border-color: var(--henna); }
+.switch input:checked + .track::before { transform: translateX(18px); }
+
+/* ==========================================================================
+   Badge
+   ========================================================================== */
+
+.badge, .badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.3em 0.8em;
   font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  border-radius: 9999px;
-  transition: all 0.25s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  border-radius: var(--radius-full);
+  background: var(--ivory);
+  border: 1px solid var(--gold);
+  color: var(--ink-soft);
 }
 
-.btn-primary:hover {
-  background-color: #322E2B;
-  border-color: #322E2B;
-  transform: translateY(-1px);
+/* ==========================================================================
+   Modal
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 24, 21, 0.65);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease-out-expo), visibility var(--dur-base);
+}
+.modal-backdrop.is-open { opacity: 1; visibility: visible; }
+
+.modal-panel {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  transform: translateY(24px) scale(0.97);
+  opacity: 0;
+  transition: transform var(--dur-slow) var(--ease-out-expo),
+              opacity var(--dur-base) var(--ease-out-expo);
+}
+.modal-backdrop.is-open .modal-panel {
+  transform: translateY(0) scale(1);
+  opacity: 1;
 }
 
-.btn-primary:active {
-  transform: translateY(0px);
-}
+/* ==========================================================================
+   Spinner
+   ========================================================================== */
 
-.dark .btn-primary {
-  background-color: #F7F5F0;
-  color: #141312;
-  border-color: #F7F5F0;
+.spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--henna));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+  animation: spin 800ms linear infinite;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.dark .btn-primary:hover {
-  background-color: #E2DDD5;
-  border-color: #E2DDD5;
+/* ==========================================================================
+   Scroll reveal
+   ========================================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--dur-slow) var(--ease-out-expo),
+              transform var(--dur-slow) var(--ease-out-expo);
 }
-
-.btn-secondary {
-  background-color: transparent;
-  color: #1C1A18;
-  border: 1px solid #D1C9BC;
-  padding: 0.75rem 1.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  border-radius: 9999px;
-  transition: all 0.25s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.btn-secondary:hover {
-  background-color: #F4EFEB;
-  border-color: #1C1A18;
-}
-
-.btn-secondary:active {
-  transform: translateY(0px);
-}
-
-.dark .btn-secondary {
-  color: #F7F5F0;
-  border-color: #383430;
-}
-
-.dark .btn-secondary:hover {
-  background-color: #23211E;
-  border-color: #F7F5F0;
-}
-
-/* Card Utility */
-.editorial-card {
-  background-color: #FFFFFF;
-  border: 1px solid #E8E2D9;
-  box-shadow: var(--shadow-soft);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.editorial-card:hover {
-  box-shadow: var(--shadow-hover);
-  border-color: #D6CCC0;
-}
-
-.dark .editorial-card {
-  background-color: #1C1A18;
-  border-color: #2A2724;
-}
-
-.dark .editorial-card:hover {
-  border-color: #3E3A35;
-}
-
-/* Status Badge - Single Status Indicator */
-.badge-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  background-color: #EEF4F0;
-  color: #2F483C;
-  border: 1px solid #C8DBD0;
-}
-
-.dark .badge-status {
-  background-color: #192520;
-  color: #79A892;
-  border-color: #283C33;
-}
-
-/* Minimalist Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: #D1C9BC;
-  border-radius: 9999px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #383430;
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }

@@ -39,17 +39,17 @@ export const AuthPage: React.FC = () => {
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       
-      <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden editorial-card shadow-xl">
+      <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden card bg-[#f7f1e6] border border-[rgba(27,24,21,0.12)] shadow-xl">
         
         {/* Left Editorial Visual (5 Cols) */}
-        <div className="hidden lg:block lg:col-span-5 relative bg-[#1C1A18] text-white p-10 flex flex-col justify-between overflow-hidden">
+        <div className="hidden lg:block lg:col-span-5 relative bg-[#1b1815] text-[#f7f1e6] p-10 flex flex-col justify-between overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?auto=format&fit=crop&w=800&q=80"
             alt="Atelier"
             className="absolute inset-0 w-full h-full object-cover opacity-35"
           />
           <div className="relative z-10 space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4A373]">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#c9a227]">
               Zari & Henna Atelier
             </span>
             <h2 className="font-serif-editorial text-2xl font-bold leading-snug">
@@ -57,7 +57,7 @@ export const AuthPage: React.FC = () => {
             </h2>
           </div>
 
-          <div className="relative z-10 space-y-2 pt-12 text-xs text-[#A8A298]">
+          <div className="relative z-10 space-y-2 pt-12 text-xs text-[#f7f1e6]/70">
             <p>· Certified 100% natural botanical henna</p>
             <p>· Escrow deposit protection on all dates</p>
             <p>· Vetted master artisans across Dubai, London & NY</p>
@@ -65,16 +65,16 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {/* Right Form (7 Cols) */}
-        <div className="lg:col-span-7 p-8 sm:p-12 space-y-6 bg-white dark:bg-[#1C1A18]">
+        <div className="lg:col-span-7 p-8 sm:p-12 space-y-6 bg-[#f7f1e6]">
           
           <div className="space-y-1.5">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8E5A3C] block">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9c4221] block">
               {isSignUp ? 'Create Atelier Account' : 'Welcome to Atelier'}
             </span>
-            <h1 className="font-serif-editorial text-3xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+            <h1 className="font-serif-editorial text-3xl font-bold text-[#1b1815]">
               {isSignUp ? 'Join the Atelier' : 'Sign in to Your Account'}
             </h1>
-            <p className="text-xs text-[#6B665F]">
+            <p className="text-xs text-[#2c2620]/75">
               {isSignUp
                 ? 'Commission master artists or list your bridal studio services.'
                 : 'Access your appointments, saved portfolios, or artist studio.'}
@@ -82,14 +82,14 @@ export const AuthPage: React.FC = () => {
           </div>
 
           {/* Role Toggle */}
-          <div className="p-1 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] grid grid-cols-2 gap-1 text-xs font-semibold">
+          <div className="p-1 rounded-xl bg-[#efe6d4] border border-[rgba(27,24,21,0.12)] grid grid-cols-2 gap-1 text-xs font-semibold">
             <button
               type="button"
               onClick={() => setRole('customer')}
-              className={`py-2 rounded-lg transition-all ${
+              className={`py-2 rounded-lg transition-all cursor-pointer ${
                 role === 'customer'
-                  ? 'bg-white dark:bg-[#1C1A18] text-[#1C1A18] dark:text-[#F7F5F0] shadow-xs'
-                  : 'text-[#6B665F]'
+                  ? 'bg-[#f7f1e6] text-[#1b1815] shadow-xs'
+                  : 'text-[#2c2620]/70'
               }`}
             >
               I am a Bride / Client
@@ -97,10 +97,10 @@ export const AuthPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setRole('artist')}
-              className={`py-2 rounded-lg transition-all ${
+              className={`py-2 rounded-lg transition-all cursor-pointer ${
                 role === 'artist'
-                  ? 'bg-white dark:bg-[#1C1A18] text-[#1C1A18] dark:text-[#F7F5F0] shadow-xs'
-                  : 'text-[#6B665F]'
+                  ? 'bg-[#f7f1e6] text-[#1b1815] shadow-xs'
+                  : 'text-[#2c2620]/70'
               }`}
             >
               I am a Mehndi Artist
@@ -111,7 +111,7 @@ export const AuthPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             {isSignUp && (
               <div className="space-y-1">
-                <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">
+                <label className="font-bold uppercase tracking-wider block text-[#1b1815]">
                   Full Name
                 </label>
                 <input
@@ -120,13 +120,13 @@ export const AuthPage: React.FC = () => {
                   placeholder={role === 'artist' ? 'e.g. Ayesha Noor Khan' : 'e.g. Suhana Patel'}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312] text-[#1C1A18] dark:text-[#F7F5F0] focus:outline-none focus:border-[#1C1A18]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815] focus:outline-none focus:border-[#9c4221]"
                 />
               </div>
             )}
 
             <div className="space-y-1">
-              <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">
+              <label className="font-bold uppercase tracking-wider block text-[#1b1815]">
                 Email Address
               </label>
               <input
@@ -135,12 +135,12 @@ export const AuthPage: React.FC = () => {
                 placeholder="bride@atelier.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312] text-[#1C1A18] dark:text-[#F7F5F0] focus:outline-none focus:border-[#1C1A18]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815] focus:outline-none focus:border-[#9c4221]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">
+              <label className="font-bold uppercase tracking-wider block text-[#1b1815]">
                 Password
               </label>
               <input
@@ -149,14 +149,14 @@ export const AuthPage: React.FC = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312] text-[#1C1A18] dark:text-[#F7F5F0] focus:outline-none focus:border-[#1C1A18]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[rgba(27,24,21,0.12)] bg-[#efe6d4] text-[#1b1815] focus:outline-none focus:border-[#9c4221]"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn-primary w-full !py-3"
+              className="btn btn-primary w-full !py-3"
             >
               <span>{isSubmitting ? 'Authenticating...' : isSignUp ? 'Create Atelier Account' : 'Sign In'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -164,33 +164,33 @@ export const AuthPage: React.FC = () => {
           </form>
 
           {/* 1-Click Instant Demo Credentials */}
-          <div className="pt-4 border-t border-[#F0EAE1] dark:border-[#2A2724] space-y-2">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-[#9E988F] text-center">
+          <div className="pt-4 border-t border-[rgba(27,24,21,0.1)] space-y-2">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-[#2c2620]/60 text-center">
               Quick Test Sign-In
             </p>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
                 onClick={handleDemoBride}
-                className="py-2 px-3 rounded-lg border border-[#E8E2D9] font-medium text-[#1C1A18] dark:text-[#F7F5F0] hover:bg-[#FAF8F5] transition-colors text-center"
+                className="btn btn-ghost !py-2 !px-3 text-center !rounded-xl"
               >
                 Enter as <strong>Bride</strong>
               </button>
               <button
                 type="button"
                 onClick={handleDemoArtist}
-                className="py-2 px-3 rounded-lg border border-[#8E5A3C] font-medium text-[#8E5A3C] hover:bg-[#F6EDE7] transition-colors text-center"
+                className="btn btn-primary !py-2 !px-3 text-center !rounded-xl"
               >
                 Enter as <strong>Artist</strong>
               </button>
             </div>
           </div>
 
-          <p className="text-center text-xs text-[#6B665F]">
+          <p className="text-center text-xs text-[#2c2620]/75">
             {isSignUp ? (
-              <>Already have an account? <Link to="/login" className="font-bold text-[#1C1A18] dark:text-[#F7F5F0] underline">Sign in</Link></>
+              <>Already have an account? <Link to="/login" className="font-bold text-[#1b1815] underline">Sign in</Link></>
             ) : (
-              <>New to Zari & Henna? <Link to="/signup" className="font-bold text-[#1C1A18] dark:text-[#F7F5F0] underline">Create an account</Link></>
+              <>New to Zari & Henna? <Link to="/signup" className="font-bold text-[#1b1815] underline">Create an account</Link></>
             )}
           </p>
 
