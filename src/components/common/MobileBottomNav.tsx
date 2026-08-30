@@ -16,92 +16,90 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenAIQuiz }
   const isArtist = user?.role === 'artist';
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FDFBF7]/95 dark:bg-[#07100D]/95 backdrop-blur-xl border-t border-[#EFE7DA] dark:border-[#1F362E] px-3 py-2 shadow-2xl">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FAF8F5]/95 dark:bg-[#141312]/95 backdrop-blur-md border-t border-[#E8E2D9] dark:border-[#2A2724] px-4 py-2.5">
       <div className="flex items-center justify-around">
         
-        {/* Explore */}
+        {/* 1. Explore */}
         <Link
           to="/artists"
-          className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+          className={`flex flex-col items-center gap-1 text-[10px] font-semibold tracking-wider uppercase transition-colors ${
             location.pathname === '/artists'
-              ? 'text-[#064E3B] dark:text-[#E5C07B] font-bold'
-              : 'text-[#5C6763] dark:text-[#B2C2BC]'
+              ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
+              : 'text-[#9E988F] dark:text-[#6E6860]'
           }`}
         >
-          <Compass className="w-5 h-5" />
-          <span>Explore</span>
+          <Compass className="w-5 h-5" strokeWidth={1.5} />
+          <span>Artisans</span>
         </Link>
 
-        {/* AI Quiz Button */}
+        {/* 2. AI Style Matcher - Consistent with other icons */}
         <button
           onClick={onOpenAIQuiz}
-          className="flex flex-col items-center gap-1 text-[10px] font-medium text-[#C59B27] dark:text-[#E5C07B]"
+          className="flex flex-col items-center gap-1 text-[10px] font-semibold tracking-wider uppercase text-[#9E988F] dark:text-[#6E6860] hover:text-[#8E5A3C]"
         >
-          <div className="w-8 h-8 -mt-3 rounded-full bg-gradient-to-tr from-[#064E3B] to-[#C59B27] p-0.5 shadow-md flex items-center justify-center text-white">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
-          <span>AI Match</span>
+          <Sparkles className="w-5 h-5" strokeWidth={1.5} />
+          <span>Advisor</span>
         </button>
 
-        {/* Wishlist */}
+        {/* 3. Wishlist */}
         <Link
           to="/customer-dashboard?tab=saved"
-          className={`relative flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+          className={`relative flex flex-col items-center gap-1 text-[10px] font-semibold tracking-wider uppercase transition-colors ${
             location.search.includes('saved')
-              ? 'text-[#7A1C2D] font-bold'
-              : 'text-[#5C6763] dark:text-[#B2C2BC]'
+              ? 'text-[#8E5A3C]'
+              : 'text-[#9E988F] dark:text-[#6E6860]'
           }`}
         >
-          <Heart className="w-5 h-5" />
+          <Heart className="w-5 h-5" strokeWidth={1.5} />
           {favoritesCount > 0 && (
-            <span className="absolute -top-1 right-2 w-3.5 h-3.5 rounded-full bg-[#7A1C2D] text-white text-[9px] font-bold flex items-center justify-center">
+            <span className="absolute -top-1 right-2 w-3.5 h-3.5 rounded-full bg-[#1C1A18] text-white text-[9px] font-bold flex items-center justify-center">
               {favoritesCount}
             </span>
           )}
           <span>Saved</span>
         </Link>
 
-        {/* Dashboard / Bookings */}
+        {/* 4. Appointments / Studio */}
         {isArtist ? (
           <Link
             to="/artist-dashboard"
-            className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+            className={`flex flex-col items-center gap-1 text-[10px] font-semibold tracking-wider uppercase transition-colors ${
               location.pathname.startsWith('/artist-dashboard')
-                ? 'text-[#064E3B] dark:text-[#E5C07B] font-bold'
-                : 'text-[#5C6763] dark:text-[#B2C2BC]'
+                ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
+                : 'text-[#9E988F] dark:text-[#6E6860]'
             }`}
           >
-            <LayoutDashboard className="w-5 h-5" />
+            <LayoutDashboard className="w-5 h-5" strokeWidth={1.5} />
             <span>Studio</span>
           </Link>
         ) : (
           <Link
             to="/customer-dashboard"
-            className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+            className={`flex flex-col items-center gap-1 text-[10px] font-semibold tracking-wider uppercase transition-colors ${
               location.pathname.startsWith('/customer-dashboard')
-                ? 'text-[#064E3B] dark:text-[#E5C07B] font-bold'
-                : 'text-[#5C6763] dark:text-[#B2C2BC]'
+                ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
+                : 'text-[#9E988F] dark:text-[#6E6860]'
             }`}
           >
-            <Calendar className="w-5 h-5" />
+            <Calendar className="w-5 h-5" strokeWidth={1.5} />
             <span>Bookings</span>
           </Link>
         )}
 
-        {/* Profile / Account */}
+        {/* 5. Account */}
         <Link
           to={user ? (isArtist ? '/artist-dashboard?tab=profile' : '/customer-dashboard?tab=profile') : '/login'}
-          className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+          className={`flex flex-col items-center gap-1 text-[10px] font-semibold tracking-wider uppercase transition-colors ${
             location.pathname === '/login' || location.search.includes('profile')
-              ? 'text-[#064E3B] dark:text-[#E5C07B] font-bold'
-              : 'text-[#5C6763] dark:text-[#B2C2BC]'
+              ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
+              : 'text-[#9E988F] dark:text-[#6E6860]'
           }`}
         >
-          <User className="w-5 h-5" />
-          <span>{user ? 'Account' : 'Sign In'}</span>
+          <User className="w-5 h-5" strokeWidth={1.5} />
+          <span>{user ? 'Profile' : 'Sign In'}</span>
         </Link>
 
       </div>
-    </div>
+    </nav>
   );
 };

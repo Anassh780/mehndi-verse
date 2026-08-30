@@ -9,13 +9,8 @@ import {
   Menu, 
   X, 
   ChevronDown, 
-  Sparkle, 
-  Crown, 
   LogOut, 
-  LayoutDashboard,
-  ShieldCheck,
-  MapPin,
-  Flame
+  LayoutDashboard
 } from 'lucide-react';
 import { useMehndiAuth } from '@/context/MehndiAuthContext';
 import { useFavorites } from '@/context/FavoritesContext';
@@ -25,193 +20,174 @@ interface NavbarProps {
   onOpenSearch?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { user, isAuthenticated, isArtist, isCustomer, loginAsCustomer, loginAsArtist, logout } = useMehndiAuth();
+  const { user, isAuthenticated, isArtist, loginAsCustomer, loginAsArtist, logout } = useMehndiAuth();
   const { favoritesCount } = useFavorites();
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
     setUserDropdownOpen(false);
   }, [location.pathname]);
 
   const navLinks = [
-    { name: 'Explore Artists', path: '/artists' },
-    { name: 'Bridal Styles', path: '/#categories' },
-    { name: 'How It Works', path: '/#how-it-works' },
-    { name: 'Inspiration Blog', path: '/blog' },
-    { name: 'About Atelier', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Artisans', path: '/artists' },
+    { name: 'Traditions', path: '/#categories' },
+    { name: 'Process', path: '/#how-it-works' },
+    { name: 'Editorial', path: '/blog' },
+    { name: 'Atelier', path: '/about' },
+    { name: 'Inquiries', path: '/contact' },
   ];
 
   return (
     <>
-      {/* Top Banner Notice */}
-      <div className="bg-[#064E3B] text-[#E5C07B] text-xs py-2 px-4 text-center font-medium border-b border-[#0D6951] flex items-center justify-center gap-2 relative z-50">
-        <Sparkles className="w-3.5 h-3.5 animate-pulse text-[#E5C07B]" />
-        <span>Wedding Season 2026: <strong>100% Certified Organic & Chemical-Free Henna Guarantee</strong> across all vetted artists.</span>
-        <span className="hidden md:inline text-white/50">|</span>
-        <span className="hidden md:inline text-[#FAF6F0] underline cursor-pointer hover:text-white" onClick={onOpenAIQuiz}>
-          Take the 60-second AI Bridal Henna Quiz →
-        </span>
+      {/* Top Editorial Announcement Bar */}
+      <div className="bg-[#F4EFEB] dark:bg-[#1C1A18] text-[#1C1A18] dark:text-[#F7F5F0] text-[11px] py-2 px-4 text-center font-medium border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center justify-center gap-3">
+        <span>A curated collective of master bridal henna artisans · 100% pure botanical formulas</span>
+        <span className="hidden md:inline text-[#D1C9BC]">|</span>
+        <button
+          onClick={onOpenAIQuiz}
+          className="hidden md:inline text-[#8E5A3C] dark:text-[#D4A373] hover:underline font-semibold cursor-pointer"
+        >
+          Consult the AI Bridal Advisor →
+        </button>
       </div>
 
-      {/* Floating Glass Pill Navigation Bar */}
+      {/* Main Navigation Header */}
       <header
         className={`sticky top-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'py-3 bg-[#FDFBF7]/90 dark:bg-[#07100D]/90 backdrop-blur-xl border-b border-[#EFE7DA] dark:border-[#1F362E] shadow-sm'
+            ? 'py-3.5 bg-[#FAF8F5]/95 dark:bg-[#141312]/95 backdrop-blur-md border-b border-[#E8E2D9] dark:border-[#2A2724] shadow-xs'
             : 'py-5 bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             
-            {/* Brand Logo */}
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#064E3B] to-[#7A1C2D] p-[1.5px] shadow-sm transition-transform duration-300 group-hover:scale-105">
-                <div className="w-full h-full rounded-full bg-[#FDFBF7] dark:bg-[#07100D] flex items-center justify-center">
-                  <Crown className="w-5 h-5 text-[#C59B27]" />
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#064E3B] dark:text-[#E5C07B] flex items-center gap-1">
-                  ZARI & HENNA
-                </span>
-                <span className="text-[9px] uppercase tracking-[0.25em] text-[#C59B27] font-semibold">
-                  Luxury Mehndi Atelier
-                </span>
-              </div>
+            {/* Brand Wordmark */}
+            <Link to="/" className="flex items-baseline gap-2.5 group">
+              <span className="font-serif-editorial text-2xl sm:text-3xl font-bold tracking-tight text-[#1C1A18] dark:text-[#F7F5F0]">
+                ZARI & HENNA
+              </span>
+              <span className="hidden sm:inline text-[9px] uppercase tracking-[0.25em] text-[#8E5A3C] dark:text-[#D4A373] font-medium border-l border-[#D1C9BC] pl-2.5">
+                Bridal Atelier
+              </span>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-7">
+            <nav className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
                   <Link
                     key={link.name}
                     to={link.path}
-                    className={`text-sm font-medium tracking-wide transition-colors relative py-1 ${
+                    className={`text-xs font-semibold uppercase tracking-wider transition-colors relative py-1 ${
                       isActive
-                        ? 'text-[#064E3B] dark:text-[#E5C07B] font-semibold'
-                        : 'text-[#5C6763] dark:text-[#B2C2BC] hover:text-[#064E3B] dark:hover:text-[#E5C07B]'
+                        ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
+                        : 'text-[#6B665F] dark:text-[#A8A298] hover:text-[#1C1A18] dark:hover:text-[#F7F5F0]'
                     }`}
                   >
                     {link.name}
                     {isActive && (
-                      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#C59B27] rounded-full" />
+                      <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#1C1A18] dark:bg-[#F7F5F0]" />
                     )}
                   </Link>
                 );
               })}
             </nav>
 
-            {/* Right Action Buttons */}
-            <div className="hidden sm:flex items-center gap-3">
+            {/* Right Action Cluster */}
+            <div className="hidden sm:flex items-center gap-4">
               
-              {/* AI Recommendation Sparkle Trigger */}
+              {/* AI Style Consultation Trigger */}
               <button
                 onClick={onOpenAIQuiz}
-                className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FEF9EE] dark:bg-[#282010] border border-[#C59B27]/40 text-[#9A7516] dark:text-[#E5C07B] text-xs font-semibold hover:bg-[#C59B27] hover:text-white transition-all shadow-xs"
+                className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-[#8E5A3C] dark:text-[#D4A373] hover:text-[#1C1A18] dark:hover:text-white transition-colors px-2 py-1"
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#C59B27]" />
-                <span>AI Style Matcher</span>
+                <Sparkles className="w-3.5 h-3.5" strokeWidth={1.5} />
+                <span>Style Advisor</span>
               </button>
 
               {/* Wishlist Favorites */}
               <Link
                 to="/customer-dashboard?tab=saved"
-                className="relative p-2 rounded-full text-[#5C6763] hover:text-[#7A1C2D] dark:text-[#B2C2BC] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                title="Saved Artists"
+                className="relative p-2 text-[#6B665F] hover:text-[#1C1A18] dark:text-[#A8A298] dark:hover:text-white transition-colors"
+                title="Saved Artisans"
+                aria-label="Wishlist"
               >
-                <Heart className="w-5 h-5" />
+                <Heart className="w-4 h-4" strokeWidth={1.5} />
                 {favoritesCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#7A1C2D] text-white text-[10px] font-bold flex items-center justify-center">
+                  <span className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-[#1C1A18] text-white dark:bg-white dark:text-black text-[9px] font-bold flex items-center justify-center">
                     {favoritesCount}
                   </span>
                 )}
               </Link>
 
-              {/* User Account / Demo Switcher Menu */}
+              {/* Account Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 p-1.5 pl-2.5 rounded-full border border-[#EFE7DA] dark:border-[#1F362E] bg-white dark:bg-[#0E1A16] hover:border-[#C59B27]/50 transition-all text-xs font-medium text-[#1A2421] dark:text-[#F8F5EE]"
+                  className="flex items-center gap-2 py-1 px-2.5 rounded-full border border-[#E8E2D9] dark:border-[#2A2724] bg-white dark:bg-[#1C1A18] text-xs font-medium text-[#1C1A18] dark:text-[#F7F5F0] hover:border-[#1C1A18] transition-colors"
                 >
                   {user ? (
                     <>
                       <img
                         src={user.avatar}
                         alt={user.name}
-                        className="w-6 h-6 rounded-full object-cover border border-[#C59B27]/40"
+                        className="w-5 h-5 rounded-full object-cover"
                       />
-                      <span className="max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
-                      <span className="text-[10px] uppercase font-bold text-[#C59B27] bg-[#FEF9EE] dark:bg-[#282010] px-1.5 py-0.5 rounded">
-                        {user.role}
-                      </span>
+                      <span className="max-w-[80px] truncate">{user.name.split(' ')[0]}</span>
                     </>
                   ) : (
                     <>
-                      <User className="w-4 h-4 text-[#5C6763]" />
+                      <User className="w-3.5 h-3.5 text-[#6B665F]" strokeWidth={1.5} />
                       <span>Account</span>
                     </>
                   )}
-                  <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+                  <ChevronDown className="w-3 h-3 text-[#9E988F]" />
                 </button>
 
                 {/* Dropdown Menu */}
                 {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#0E1A16] border border-[#EFE7DA] dark:border-[#1F362E] shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute right-0 mt-2 w-60 rounded-xl bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                     {user ? (
                       <>
-                        <div className="px-4 py-2.5 border-b border-[#EFE7DA] dark:border-[#1F362E]">
-                          <p className="text-xs font-semibold text-[#1A2421] dark:text-[#F8F5EE]">{user.name}</p>
-                          <p className="text-[11px] text-[#5C6763] dark:text-[#B2C2BC] truncate">{user.email}</p>
+                        <div className="px-4 py-2 border-b border-[#F0EAE1] dark:border-[#2A2724]">
+                          <p className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{user.name}</p>
+                          <p className="text-[11px] text-[#6B665F] dark:text-[#A8A298] truncate">{user.email}</p>
                         </div>
                         <div className="py-1">
                           {user.role === 'artist' ? (
                             <Link
                               to="/artist-dashboard"
-                              className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#064E3B] dark:text-[#E5C07B] hover:bg-[#ECFDF5] dark:hover:bg-[#06281F]"
+                              className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#1C1A18] dark:text-[#F7F5F0] hover:bg-[#F4EFEB] dark:hover:bg-[#23211E]"
                             >
-                              <LayoutDashboard className="w-4 h-4" />
-                              <span>Artist SaaS Studio</span>
+                              <LayoutDashboard className="w-3.5 h-3.5" />
+                              <span>Artist Studio</span>
                             </Link>
                           ) : (
                             <Link
                               to="/customer-dashboard"
-                              className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#064E3B] dark:text-[#E5C07B] hover:bg-[#ECFDF5] dark:hover:bg-[#06281F]"
+                              className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-[#1C1A18] dark:text-[#F7F5F0] hover:bg-[#F4EFEB] dark:hover:bg-[#23211E]"
                             >
-                              <Calendar className="w-4 h-4" />
-                              <span>My Bridal Bookings</span>
+                              <Calendar className="w-3.5 h-3.5" />
+                              <span>My Appointments</span>
                             </Link>
                           )}
-                          <Link
-                            to="/customer-dashboard?tab=messages"
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs text-[#5C6763] dark:text-[#B2C2BC] hover:bg-black/5 dark:hover:bg-white/5"
-                          >
-                            <span>Artist Messenger</span>
-                          </Link>
                         </div>
-                        <div className="border-t border-[#EFE7DA] dark:border-[#1F362E] pt-1 mt-1">
+                        <div className="border-t border-[#F0EAE1] dark:border-[#2A2724] pt-1">
                           <button
                             onClick={() => {
                               if (user.role === 'customer') {
@@ -221,10 +197,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) =>
                               }
                               setUserDropdownOpen(false);
                             }}
-                            className="w-full text-left flex items-center justify-between px-4 py-2 text-xs text-[#C59B27] font-semibold hover:bg-[#FEF9EE] dark:hover:bg-[#282010]"
+                            className="w-full text-left px-4 py-2 text-xs text-[#8E5A3C] font-semibold hover:bg-[#F4EFEB] dark:hover:bg-[#23211E]"
                           >
-                            <span>Switch to {user.role === 'customer' ? 'Artist Mode' : 'Bride Mode'}</span>
-                            <span className="text-[10px] bg-[#C59B27]/20 px-1.5 py-0.5 rounded">Demo</span>
+                            Switch to {user.role === 'customer' ? 'Artist Mode' : 'Bride Mode'}
                           </button>
                           <button
                             onClick={() => {
@@ -242,7 +217,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) =>
                       <div className="p-2 space-y-1">
                         <Link
                           to="/login"
-                          className="block w-full text-center px-4 py-2 rounded-xl bg-[#064E3B] text-white text-xs font-semibold hover:bg-[#022C22] transition-colors"
+                          className="block w-full text-center py-2 rounded-lg bg-[#1C1A18] text-white text-xs font-semibold"
                         >
                           Sign In / Register
                         </Link>
@@ -252,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) =>
                               loginAsCustomer();
                               setUserDropdownOpen(false);
                             }}
-                            className="text-center px-2 py-1.5 rounded-lg border border-[#EFE7DA] dark:border-[#1F362E] text-[11px] font-medium text-[#5C6763] hover:bg-black/5"
+                            className="text-center py-1.5 rounded border border-[#E8E2D9] text-[11px] font-medium text-[#6B665F] hover:bg-[#F4EFEB]"
                           >
                             Demo Bride
                           </button>
@@ -261,7 +236,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) =>
                               loginAsArtist();
                               setUserDropdownOpen(false);
                             }}
-                            className="text-center px-2 py-1.5 rounded-lg border border-[#C59B27]/40 text-[11px] font-medium text-[#C59B27] hover:bg-[#FEF9EE]"
+                            className="text-center py-1.5 rounded border border-[#8E5A3C] text-[11px] font-medium text-[#8E5A3C] hover:bg-[#F6EDE7]"
                           >
                             Demo Artist
                           </button>
@@ -272,24 +247,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) =>
                 )}
               </div>
 
-              {/* Primary Call to Action Button */}
+              {/* Primary Action Button */}
               {user?.role === 'artist' ? (
-                <Link
-                  to="/artist-dashboard"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#064E3B] to-[#0D6951] text-white text-xs font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                  <LayoutDashboard className="w-3.5 h-3.5" />
-                  <span>Artist Studio</span>
+                <Link to="/artist-dashboard" className="btn-primary">
+                  <span>Studio</span>
                 </Link>
               ) : (
-                <Link
-                  to="/artists"
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#7A1C2D] to-[#4A0E17] text-white text-xs font-semibold shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                  <span>Book an Artist</span>
-                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
-                    ↗
-                  </span>
+                <Link to="/artists" className="btn-primary">
+                  <span>Reserve Artist</span>
                 </Link>
               )}
             </div>
@@ -297,15 +262,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) =>
             {/* Mobile Hamburger Button */}
             <div className="flex items-center gap-2 lg:hidden">
               <button
-                onClick={onOpenAIQuiz}
-                className="p-2 rounded-full bg-[#FEF9EE] text-[#C59B27] border border-[#C59B27]/30"
-                title="AI Henna Quiz"
-              >
-                <Sparkles className="w-4 h-4" />
-              </button>
-              <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-xl border border-[#EFE7DA] dark:border-[#1F362E] text-[#1A2421] dark:text-[#F8F5EE]"
+                className="p-2 rounded-lg border border-[#E8E2D9] dark:border-[#2A2724] text-[#1C1A18] dark:text-[#F7F5F0]"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -316,129 +274,64 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAIQuiz, onOpenSearch }) =>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay Drawer */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="fixed right-0 top-0 bottom-0 w-4/5 max-w-sm bg-[#FDFBF7] dark:bg-[#07100D] border-l border-[#EFE7DA] dark:border-[#1F362E] p-6 flex flex-col justify-between shadow-2xl overflow-y-auto">
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="fixed right-0 top-0 bottom-0 w-4/5 max-w-sm bg-[#FAF8F5] dark:bg-[#141312] border-l border-[#E8E2D9] dark:border-[#2A2724] p-6 flex flex-col justify-between shadow-2xl overflow-y-auto">
             <div>
-              {/* Top Row */}
-              <div className="flex items-center justify-between pb-4 border-b border-[#EFE7DA] dark:border-[#1F362E]">
-                <div className="flex items-center gap-2">
-                  <Crown className="w-5 h-5 text-[#C59B27]" />
-                  <span className="font-serif font-bold text-lg text-[#064E3B] dark:text-[#E5C07B]">ZARI & HENNA</span>
-                </div>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5"
-                >
+              <div className="flex items-center justify-between pb-4 border-b border-[#E8E2D9] dark:border-[#2A2724]">
+                <span className="font-serif-editorial font-bold text-lg text-[#1C1A18] dark:text-[#F7F5F0]">ZARI & HENNA</span>
+                <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-[#6B665F]">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Navigation Links */}
-              <div className="py-6 space-y-3">
+              <div className="py-6 space-y-4">
                 {navLinks.map((link) => (
                   <Link
                     key={link.name}
                     to={link.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-base font-medium text-[#1A2421] dark:text-[#F8F5EE] py-2 hover:text-[#064E3B] dark:hover:text-[#E5C07B]"
+                    className="block text-sm font-semibold uppercase tracking-wider text-[#1C1A18] dark:text-[#F7F5F0] py-1"
                   >
                     {link.name}
                   </Link>
                 ))}
-                
-                <div className="pt-2">
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      if (onOpenAIQuiz) onOpenAIQuiz();
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl bg-[#FEF9EE] dark:bg-[#282010] border border-[#C59B27]/40 text-[#9A7516] dark:text-[#E5C07B] text-sm font-semibold"
-                  >
-                    <span className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4" />
-                      <span>AI Henna Style Quiz</span>
-                    </span>
-                    <span>→</span>
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onOpenAIQuiz) onOpenAIQuiz();
+                  }}
+                  className="w-full text-left text-sm font-semibold text-[#8E5A3C] py-2 flex items-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>AI Style Consultation</span>
+                </button>
               </div>
             </div>
 
-            {/* Bottom Auth Switcher */}
-            <div className="pt-6 border-t border-[#EFE7DA] dark:border-[#1F362E] space-y-3">
+            <div className="pt-6 border-t border-[#E8E2D9] dark:border-[#2A2724]">
               {user ? (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full object-cover border border-[#C59B27]" />
-                    <div>
-                      <p className="text-sm font-bold text-[#1A2421] dark:text-[#F8F5EE]">{user.name}</p>
-                      <p className="text-xs text-[#5C6763] capitalize">{user.role} Account</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 pt-2">
-                    {user.role === 'artist' ? (
-                      <Link
-                        to="/artist-dashboard"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-center py-2 rounded-xl bg-[#064E3B] text-white text-xs font-semibold"
-                      >
-                        Artist Dashboard
-                      </Link>
-                    ) : (
-                      <Link
-                        to="/customer-dashboard"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-center py-2 rounded-xl bg-[#064E3B] text-white text-xs font-semibold"
-                      >
-                        My Bookings
-                      </Link>
-                    )}
-                    <button
-                      onClick={() => {
-                        logout();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="py-2 rounded-xl border border-red-200 text-red-600 text-xs font-medium"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
+                <div className="space-y-3">
+                  <p className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{user.name}</p>
+                  <Link
+                    to={user.role === 'artist' ? '/artist-dashboard' : '/customer-dashboard'}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="btn-primary w-full text-center"
+                  >
+                    Go to {user.role === 'artist' ? 'Studio' : 'Appointments'}
+                  </Link>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full text-center py-2.5 rounded-xl bg-[#064E3B] text-white text-sm font-semibold"
-                  >
-                    Login / Sign Up
-                  </Link>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => {
-                        loginAsCustomer();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="py-2 rounded-lg border border-[#EFE7DA] text-xs font-medium text-[#5C6763]"
-                    >
-                      Demo Bride
-                    </button>
-                    <button
-                      onClick={() => {
-                        loginAsArtist();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="py-2 rounded-lg border border-[#C59B27] text-xs font-medium text-[#C59B27]"
-                    >
-                      Demo Artist
-                    </button>
-                  </div>
-                </div>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="btn-primary w-full text-center"
+                >
+                  Sign In / Register
+                </Link>
               )}
             </div>
-
           </div>
         </div>
       )}

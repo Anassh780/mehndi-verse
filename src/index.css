@@ -2,113 +2,84 @@
 
 @layer base {
   :root {
-    /* Luxury Mehndi Palette - Light Luxury Mode */
-    --bg: #FDFBF7;
+    /* Editorial Neutral System */
+    --bg: #FAF8F5;
     --surface: #FFFFFF;
-    --surface-alt: #F8F4EB;
-    --surface-elevated: #FFFFFF;
-    --ink: #1A2421;
-    --ink-soft: #5C6763;
-    --ink-muted: #8E9995;
+    --surface-alt: #F4EFEB;
+    --surface-card: #FFFFFF;
     
-    /* Royal Emerald */
-    --emerald-primary: #064E3B;
-    --emerald-dark: #022C22;
-    --emerald-light: #0D6951;
-    --emerald-subtle: #ECFDF5;
+    /* Inks */
+    --ink: #1C1A18;
+    --ink-muted: #6B665F;
+    --ink-subtle: #9E988F;
     
-    /* Royal Burgundy & Maroon */
-    --burgundy-primary: #7A1C2D;
-    --burgundy-dark: #4A0E17;
-    --burgundy-light: #9B2C3B;
-    --burgundy-subtle: #FDF2F4;
+    /* Single Considered Accent: Antique Umber / Warm Ochre */
+    --accent: #8E5A3C;
+    --accent-light: #F6EDE7;
+    --accent-border: #DBC8BC;
     
-    /* Champagne Gold & Warm Accents */
-    --gold-primary: #C59B27;
-    --gold-light: #E5C07B;
-    --gold-dark: #9A7516;
-    --gold-subtle: #FEF9EE;
-    --gold-border: rgba(197, 155, 39, 0.25);
+    /* Supporting State Tone: Muted Botanical Sage */
+    --sage: #385648;
+    --sage-bg: #EEF4F0;
+    --sage-border: #C8DBD0;
     
-    /* Structural Lines & Glass */
-    --line: #EFE7DA;
-    --line-subtle: #F4EFE6;
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(212, 175, 55, 0.2);
-    --glass-shadow: 0 20px 40px -15px rgba(6, 78, 59, 0.07);
+    /* Hairlines */
+    --border: #E8E2D9;
+    --border-subtle: #F0EAE1;
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px rgba(28, 26, 24, 0.03), 0 2px 6px -1px rgba(28, 26, 24, 0.02);
+    --shadow-hover: 0 12px 30px -4px rgba(28, 26, 24, 0.06), 0 4px 10px -2px rgba(28, 26, 24, 0.03);
 
-    /* Typography */
-    --font-heading: 'Playfair Display', Georgia, serif;
-    --font-serif-accent: 'Cormorant Garamond', Georgia, serif;
-    --font-royal: 'Cinzel', serif;
+    /* Fonts */
+    --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-    /* Radii */
-    --radius-sm: 8px;
-    --radius-md: 14px;
-    --radius-lg: 20px;
-    --radius-xl: 28px;
-    --radius-full: 9999px;
-
-    /* Custom Transitions */
-    --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   html.dark,
   .dark {
-    /* Royal Dark Mode (Velvet Emerald & Midnight Maroon) */
-    --bg: #07100D;
-    --surface: #0E1A16;
-    --surface-alt: #14241F;
-    --surface-elevated: #1B2F29;
-    --ink: #F8F5EE;
-    --ink-soft: #B2C2BC;
-    --ink-muted: #72847E;
+    /* Editorial Dark Palette (Deep Charcoal / Noir Warm) */
+    --bg: #141312;
+    --surface: #1C1A18;
+    --surface-alt: #23211E;
+    --surface-card: #1C1A18;
     
-    --emerald-primary: #10B981;
-    --emerald-dark: #065F46;
-    --emerald-light: #34D399;
-    --emerald-subtle: #06281F;
+    --ink: #F7F5F0;
+    --ink-muted: #A8A298;
+    --ink-subtle: #6E6860;
     
-    --burgundy-primary: #9B2C3B;
-    --burgundy-dark: #5B1420;
-    --burgundy-light: #BE3D4F;
-    --burgundy-subtle: #290910;
+    --accent: #D4A373;
+    --accent-light: #2A2118;
+    --accent-border: #4A3A2C;
     
-    --gold-primary: #E5C07B;
-    --gold-light: #F3E5AB;
-    --gold-dark: #B8862E;
-    --gold-subtle: #282010;
-    --gold-border: rgba(229, 192, 123, 0.25);
+    --sage: #5E8C75;
+    --sage-bg: #192520;
+    --sage-border: #283C33;
     
-    --line: #1F362E;
-    --line-subtle: #182A24;
-    --glass-bg: rgba(14, 26, 22, 0.85);
-    --glass-border: rgba(229, 192, 123, 0.2);
-    --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    --border: #2A2724;
+    --border-subtle: #1F1D1A;
+    
+    --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.5);
   }
 }
 
 @theme {
-  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
   --font-display: 'Playfair Display', Georgia, serif;
-  --font-royal: 'Cinzel', serif;
-  --font-garamond: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Playfair Display', Georgia, serif;
 }
 
-/* Global Reset & Base */
+/* Global Reset */
 html {
   scroll-behavior: smooth;
   background-color: var(--bg);
   color: var(--ink);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-family: var(--font-sans);
   background-color: var(--bg);
   color: var(--ink);
   line-height: 1.6;
@@ -120,97 +91,139 @@ body {
   overflow-x: hidden;
 }
 
-/* Luxury Font Utility Classes */
-.font-playfair {
+/* Editorial Serif & Sans Classes */
+.font-serif-editorial {
   font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.02em;
 }
 
-.font-cormorant {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-}
-
-.font-cinzel {
-  font-family: 'Cinzel', serif;
-}
-
-.font-jakarta {
+.font-sans-editorial {
   font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
 
-/* Luxury Gold & Emerald Gradients */
-.bg-gold-gradient {
-  background: linear-gradient(135deg, #DFBA58 0%, #C59B27 50%, #9A7516 100%);
+/* Restrained Button Architecture */
+.btn-primary {
+  background-color: #1C1A18;
+  color: #FAF8F5;
+  border: 1px solid #1C1A18;
+  padding: 0.75rem 1.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.bg-emerald-gradient {
-  background: linear-gradient(135deg, #064E3B 0%, #033527 50%, #022018 100%);
+.btn-primary:hover {
+  background-color: #322E2B;
+  border-color: #322E2B;
+  transform: translateY(-1px);
 }
 
-.bg-royal-gradient {
-  background: linear-gradient(135deg, #064E3B 0%, #4A0E17 100%);
+.btn-primary:active {
+  transform: translateY(0px);
 }
 
-.bg-burgundy-gradient {
-  background: linear-gradient(135deg, #7A1C2D 0%, #4A0E17 100%);
+.dark .btn-primary {
+  background-color: #F7F5F0;
+  color: #141312;
+  border-color: #F7F5F0;
 }
 
-.bg-ivory-gradient {
-  background: linear-gradient(180deg, #FDFBF7 0%, #F8F3E8 100%);
+.dark .btn-primary:hover {
+  background-color: #E2DDD5;
+  border-color: #E2DDD5;
 }
 
-.bg-velvet-dark {
-  background: radial-gradient(circle at 50% 0%, #0D261E 0%, #07100D 70%);
+.btn-secondary {
+  background-color: transparent;
+  color: #1C1A18;
+  border: 1px solid #D1C9BC;
+  padding: 0.75rem 1.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-/* Text Gradients */
-.text-gold-gradient {
-  background: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 50%, #B8862E 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.btn-secondary:hover {
+  background-color: #F4EFEB;
+  border-color: #1C1A18;
 }
 
-.text-emerald-gradient {
-  background: linear-gradient(135deg, #064E3B 0%, #0D6951 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.btn-secondary:active {
+  transform: translateY(0px);
 }
 
-.text-burgundy-gradient {
-  background: linear-gradient(135deg, #881337 0%, #4A0E17 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.dark .btn-secondary {
+  color: #F7F5F0;
+  border-color: #383430;
 }
 
-/* Glassmorphism & Double-Bezel Architectural Helpers */
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+.dark .btn-secondary:hover {
+  background-color: #23211E;
+  border-color: #F7F5F0;
 }
 
-.gold-glow {
-  box-shadow: 0 0 35px -5px rgba(212, 175, 55, 0.35);
+/* Card Utility */
+.editorial-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E8E2D9;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.emerald-glow {
-  box-shadow: 0 10px 30px -8px rgba(6, 78, 59, 0.4);
+.editorial-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: #D6CCC0;
 }
 
-/* Gold Foil Hairline Border */
-.border-gold-foil {
-  border: 1px solid rgba(212, 175, 55, 0.3);
+.dark .editorial-card {
+  background-color: #1C1A18;
+  border-color: #2A2724;
 }
 
-.border-gold-foil-subtle {
-  border: 1px solid rgba(212, 175, 55, 0.15);
+.dark .editorial-card:hover {
+  border-color: #3E3A35;
 }
 
-/* Custom Scrollbar */
+/* Status Badge - Single Status Indicator */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background-color: #EEF4F0;
+  color: #2F483C;
+  border: 1px solid #C8DBD0;
+}
+
+.dark .badge-status {
+  background-color: #192520;
+  color: #79A892;
+  border-color: #283C33;
+}
+
+/* Minimalist Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -218,67 +231,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C59B27;
+  background: #D1C9BC;
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #9A7516;
-}
-
-/* Shimmer Animation */
-@keyframes shimmerGold {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,0.2) 50%, rgba(212,175,55,0) 100%);
-  background-size: 200% 100%;
-  animation: shimmerGold 3s infinite;
-}
-
-/* Subtle Floating Animation */
-@keyframes subtleFloat {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-.animate-float {
-  animation: subtleFloat 5s ease-in-out infinite;
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 4s ease-in-out infinite;
-}
-
-/* Print Utilities for Booking Invoices */
-@media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  .no-print {
-    display: none !important;
-  }
-  .print-only {
-    display: block !important;
-  }
+.dark ::-webkit-scrollbar-thumb {
+  background: #383430;
 }
