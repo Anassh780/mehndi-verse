@@ -9,9 +9,9 @@ import {
   Calendar, 
   Clock, 
   Check, 
-  Award,
-  ChevronRight,
-  ShieldCheck,
+  Award, 
+  ChevronRight, 
+  ShieldCheck, 
   ArrowRight
 } from 'lucide-react';
 import { MOCK_ARTISTS } from '@/services/mehndiData';
@@ -50,11 +50,11 @@ export const ArtistProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-12 pb-24">
+    <div className="space-y-8 sm:space-y-12 pb-32 md:pb-24">
       
       {/* 1. Header Banner & Identity */}
       <div className="relative">
-        <div className="h-64 sm:h-80 w-full overflow-hidden bg-[#F4EFEB] dark:bg-[#1C1A18] relative">
+        <div className="h-56 sm:h-80 w-full overflow-hidden bg-[#F4EFEB] dark:bg-[#1C1A18] relative">
           <img
             src={artist.coverImage}
             alt={artist.name}
@@ -64,17 +64,17 @@ export const ArtistProfilePage: React.FC = () => {
         </div>
 
         {/* Profile Card Overlay */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 sm:-mt-24 relative z-10">
-          <div className="editorial-card rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-24 relative z-10">
+          <div className="editorial-card rounded-2xl p-5 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-md">
             
             {/* Identity */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5">
               <img
                 src={artist.avatar}
                 alt={artist.name}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white dark:border-[#141312] shadow-md shrink-0"
+                className="w-18 h-18 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white dark:border-[#141312] shadow-md shrink-0"
               />
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
                     {artist.name}
@@ -89,11 +89,11 @@ export const ArtistProfilePage: React.FC = () => {
                 <p className="text-xs sm:text-sm text-[#6B665F] dark:text-[#A8A298]">
                   {artist.title} · {artist.city}, {artist.country}
                 </p>
-                <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-[#1C1A18] dark:text-[#F7F5F0] pt-1">
+                <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-[#1C1A18] dark:text-[#F7F5F0] pt-1">
                   <span className="flex items-center gap-1">
                     <Star className="w-3.5 h-3.5 fill-[#1C1A18] dark:fill-[#F7F5F0]" />
                     <span>{artist.rating.toFixed(2)}</span>
-                    <span className="text-[#9E988F] font-normal">({artist.reviewCount} commissions)</span>
+                    <span className="text-[#6B665F] font-normal">({artist.reviewCount})</span>
                   </span>
                   <span>·</span>
                   <span className="text-[#8E5A3C] font-semibold">{artist.experienceYears} Years Craft</span>
@@ -102,10 +102,10 @@ export const ArtistProfilePage: React.FC = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full md:w-auto">
               <button
                 onClick={() => toggleFavorite(artist.id)}
-                className="p-3 rounded-full border border-[#D1C9BC] text-[#6B665F] hover:text-[#8E5A3C] hover:border-[#8E5A3C] transition-colors"
+                className="p-2.5 sm:p-3 rounded-full border border-[#D1C9BC] dark:border-[#2A2724] text-[#6B665F] hover:text-[#8E5A3C] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                 title="Save"
               >
                 <Heart className={`w-4 h-4 ${favorited ? 'fill-[#8E5A3C] text-[#8E5A3C]' : ''}`} />
@@ -113,7 +113,7 @@ export const ArtistProfilePage: React.FC = () => {
 
               <button
                 onClick={handleShare}
-                className="p-3 rounded-full border border-[#D1C9BC] text-[#6B665F] hover:text-[#1C1A18] transition-colors"
+                className="p-2.5 sm:p-3 rounded-full border border-[#D1C9BC] dark:border-[#2A2724] text-[#6B665F] hover:text-[#1C1A18] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                 title="Share"
               >
                 {copied ? <Check className="w-4 h-4 text-[#385648]" /> : <Share2 className="w-4 h-4" />}
@@ -121,7 +121,7 @@ export const ArtistProfilePage: React.FC = () => {
 
               <button
                 onClick={() => setChatOpen(true)}
-                className="btn-secondary !py-2.5 !px-4 !text-xs flex items-center gap-1.5"
+                className="btn-secondary !py-2.5 !px-4 !text-xs flex items-center gap-1.5 flex-1 sm:flex-initial justify-center min-h-[44px]"
               >
                 <MessageSquare className="w-3.5 h-3.5" />
                 <span>Inquire</span>
@@ -129,7 +129,7 @@ export const ArtistProfilePage: React.FC = () => {
 
               <button
                 onClick={handleDirectBook}
-                className="btn-primary !py-2.5 !px-6 !text-xs flex-1 sm:flex-initial"
+                className="btn-primary !py-2.5 !px-6 !text-xs flex-1 sm:flex-initial justify-center min-h-[44px]"
               >
                 <span>Reserve Session</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -140,20 +140,20 @@ export const ArtistProfilePage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Navigation Tabs */}
+      {/* 2. Navigation Tabs (Horizontal swipe-friendly on Android) */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center gap-8 overflow-x-auto scrollbar-none">
+        <div className="border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center gap-6 sm:gap-8 overflow-x-auto scrollbar-none snap-x">
           {[
             { id: 'portfolio', label: `Portfolio (${artist.portfolio.length})` },
-            { id: 'packages', label: `Service Packages (${artist.packages.length})` },
-            { id: 'about', label: 'Artisan Story & Standards' },
-            { id: 'reviews', label: `Bridal Reviews (${artist.reviewCount})` },
-            { id: 'calendar', label: 'Live Availability' },
+            { id: 'packages', label: `Packages (${artist.packages.length})` },
+            { id: 'about', label: 'Story & Standards' },
+            { id: 'reviews', label: `Reviews (${artist.reviewCount})` },
+            { id: 'calendar', label: 'Availability' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`py-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap relative transition-colors ${
+              className={`py-3.5 sm:py-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap relative transition-colors snap-start min-h-[44px] ${
                 activeTab === tab.id
                   ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
                   : 'text-[#6B665F] dark:text-[#A8A298] hover:text-[#1C1A18]'
@@ -191,7 +191,7 @@ export const ArtistProfilePage: React.FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {artist.packages.map((pkg) => (
                 <ServicePackageCard key={pkg.id} pkg={pkg} artist={artist} />
               ))}
@@ -201,7 +201,7 @@ export const ArtistProfilePage: React.FC = () => {
 
         {/* TAB 3: ARTISAN STORY */}
         {activeTab === 'about' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-8 space-y-6">
               <h3 className="font-serif-editorial text-2xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
                 Heritage & Artistic Philosophy
@@ -214,7 +214,7 @@ export const ArtistProfilePage: React.FC = () => {
                 <h4 className="font-serif-editorial text-lg font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
                   100% Pure Botanical Guarantee
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[#6B665F] dark:text-[#A8A298]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs text-[#6B665F] dark:text-[#A8A298]">
                   <div className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-[#385648]" />
                     <span>Pure Organic Rajasthani Henna</span>
@@ -242,11 +242,11 @@ export const ArtistProfilePage: React.FC = () => {
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between py-2 border-b border-[#F0EAE1]">
                   <span className="text-[#6B665F]">Base Hub</span>
-                  <span className="font-semibold text-[#1C1A18]">{artist.city}, {artist.country}</span>
+                  <span className="font-semibold text-[#1C1A18] dark:text-[#F7F5F0]">{artist.city}, {artist.country}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F0EAE1]">
                   <span className="text-[#6B665F]">Average Response</span>
-                  <span className="font-semibold text-[#1C1A18]">{artist.responseTimeMinutes} mins</span>
+                  <span className="font-semibold text-[#1C1A18] dark:text-[#F7F5F0]">{artist.responseTimeMinutes} mins</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F0EAE1]">
                   <span className="text-[#6B665F]">Destination Travel</span>
@@ -279,7 +279,7 @@ export const ArtistProfilePage: React.FC = () => {
 
         {/* TAB 5: CALENDAR */}
         {activeTab === 'calendar' && (
-          <div className="p-8 rounded-2xl bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] space-y-6">
+          <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] space-y-6">
             <div className="space-y-1">
               <h3 className="font-serif-editorial text-2xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
                 Live Availability Slots
@@ -293,7 +293,7 @@ export const ArtistProfilePage: React.FC = () => {
               {artist.availability.map((slotGroup, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-xl border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312] text-xs space-y-3"
+                  className="p-4 rounded-xl border border-[#E8E2D9] dark:border-[#2A2724] bg-[#FAF8F5] dark:bg-[#141312] text-xs space-y-3"
                 >
                   <p className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{slotGroup.date}</p>
                   <div className="space-y-1.5">
@@ -319,6 +319,23 @@ export const ArtistProfilePage: React.FC = () => {
           </div>
         )}
 
+      </div>
+
+      {/* Mobile Sticky Booking Bar (Android / Phone convenience) */}
+      <div className="md:hidden fixed bottom-14 left-0 right-0 z-30 bg-[#FAF8F5]/98 dark:bg-[#141312]/98 backdrop-blur-md border-t border-[#E8E2D9] dark:border-[#2A2724] px-4 py-2.5 flex items-center justify-between shadow-lg">
+        <div>
+          <span className="text-[9px] uppercase tracking-widest text-[#6B665F] block font-semibold">Bridal Session</span>
+          <span className="font-serif-editorial text-base font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+            ${artist.startingPrice} <span className="font-sans text-[10px] font-normal text-[#6B665F]">starting</span>
+          </span>
+        </div>
+        <button
+          onClick={handleDirectBook}
+          className="btn-primary !py-2 !px-5 !text-xs"
+        >
+          <span>Reserve Date</span>
+          <ArrowRight className="w-3 h-3" />
+        </button>
       </div>
 
       {/* Lightbox Modal */}

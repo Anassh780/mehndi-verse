@@ -8,7 +8,10 @@ import {
   MapPin, 
   ArrowRight, 
   Printer, 
-  Sparkles
+  Sparkles,
+  Trash2,
+  Check,
+  AlertCircle
 } from 'lucide-react';
 import { useMehndiAuth } from '@/context/MehndiAuthContext';
 import { useFavorites } from '@/context/FavoritesContext';
@@ -24,9 +27,18 @@ export const CustomerDashboardPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'bookings' | 'saved' | 'messages' | 'profile'>(initialTab);
 
   const { user } = useMehndiAuth();
-  const { favorites } = useFavorites();
+  const { favorites, toggleFavorite } = useFavorites();
   const [bookings, setBookings] = useState<Booking[]>(bookingStorage.getBookings());
   const [selectedChatArtist, setSelectedChatArtist] = useState<{ id: string; name: string; avatar: string } | null>(null);
+  
+  // Profile update state
+  const [profileName, setProfileName] = useState(user?.name || 'Suhana Patel');
+  const [profileEmail, setProfileEmail] = useState(user?.email || 'suhana.patel@gmail.com');
+  const [profileLocation, setProfileLocation] = useState('Downtown Dubai, UAE');
+  const [profileSavedToast, setProfileSavedToast] = useState(false);
+
+  // Cancel booking modal
+  const [cancelModalBookingId, setCancelModalBookingId] = useState<string | null>(null);
 
   const savedArtists = MOCK_ARTISTS.filter(a => favorites.includes(a.id));
 
@@ -35,36 +47,48 @@ export const CustomerDashboardPage: React.FC = () => {
     setSearchParams({ tab });
   };
 
+  const handleConfirmCancelBooking = (id: string) => {
+    bookingStorage.updateBookingStatus(id, 'cancelled');
+    setBookings(bookingStorage.getBookings());
+    setCancelModalBookingId(null);
+  };
+
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfileSavedToast(true);
+    setTimeout(() => setProfileSavedToast(false), 3000);
+  };
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
       
       {/* Customer Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[#E8E2D9] dark:border-[#2A2724]">
         <div className="flex items-center gap-4">
           <img
             src={user?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80'}
-            alt={user?.name || 'Suhana Patel'}
-            className="w-14 h-14 rounded-full object-cover border border-[#E8E2D9]"
+            alt={profileName}
+            className="w-14 h-14 rounded-full object-cover border border-[#E8E2D9] dark:border-[#2A2724] shadow-xs"
           />
           <div>
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8E5A3C] block">
-              Bridal Portal
+              Bridal Client Portal
             </span>
             <h1 className="font-serif-editorial text-2xl sm:text-3xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-              {user?.name || 'Suhana Patel'}
+              {profileName}
             </h1>
-            <p className="text-xs text-[#6B665F]">Autumn 2026 Dubai Wedding Commission</p>
+            <p className="text-xs text-[#6B665F] dark:text-[#A8A298]">{profileLocation} · 2026/2027 Wedding Season</p>
           </div>
         </div>
 
-        <Link to="/artists" className="btn-primary">
-          <span>Explore Artisans</span>
+        <Link to="/artists" className="btn-primary min-h-[44px]">
+          <span>Explore Master Artisans</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center gap-8 overflow-x-auto scrollbar-none">
+      {/* Tabs (Horizontal scroll on mobile) */}
+      <div className="border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center gap-6 sm:gap-8 overflow-x-auto scrollbar-none snap-x">
         {[
           { id: 'bookings', label: `My Appointments (${bookings.length})` },
           { id: 'saved', label: `Saved Artisans (${savedArtists.length})` },
@@ -74,9 +98,9 @@ export const CustomerDashboardPage: React.FC = () => {
           <button
             key={tab.id}
             onClick={() => handleTabChange(tab.id as any)}
-            className={`py-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap relative transition-colors ${
+            className={`py-3.5 sm:py-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap relative transition-colors snap-start min-h-[44px] ${
               activeTab === tab.id
-                ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
+                ? 'text-[#1C1A18] dark:text-[#F7F5F0] font-bold'
                 : 'text-[#6B665F] dark:text-[#A8A298] hover:text-[#1C1A18]'
             }`}
           >
@@ -107,21 +131,22 @@ export const CustomerDashboardPage: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#9E988F] block">Voucher #{b.bookingNumber || b.id}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E5A3C] block">Voucher #{b.bookingNumber || b.id}</span>
                         <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
                           {b.artistName}
                         </h3>
+                        <p className="text-xs text-[#6B665F]">{b.artistCity}</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                        b.status === 'confirmed' ? 'bg-[#EEF4F0] text-[#385648]' : b.status === 'pending' ? 'bg-amber-100 text-amber-900' : 'bg-gray-100 text-gray-700'
+                      <span className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                        b.status === 'confirmed' ? 'bg-[#EEF4F0] text-[#385648] border border-[#C8DBD0]' : b.status === 'pending' ? 'bg-amber-100 text-amber-900' : 'bg-gray-100 text-gray-700'
                       }`}>
                         {b.status}
                       </span>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] text-xs space-y-1.5">
+                    <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] text-xs space-y-1.5">
                       <div className="flex justify-between">
-                        <span className="text-[#6B665F]">Package:</span>
+                        <span className="text-[#6B665F]">Tier:</span>
                         <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{b.packageName}</span>
                       </div>
                       <div className="flex justify-between">
@@ -130,26 +155,38 @@ export const CustomerDashboardPage: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-[#6B665F]">Venue:</span>
-                        <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{b.venueAddress}</span>
+                        <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0] truncate max-w-[200px]">{b.venueAddress}</span>
                       </div>
-                      <div className="flex justify-between pt-1 border-t border-[#E8E2D9]">
-                        <span className="text-[#6B665F]">Deposit Paid:</span>
-                        <span className="font-bold text-[#385648]">${b.depositAmount} USD</span>
+                      <div className="flex justify-between pt-1 border-t border-[#E8E2D9] dark:border-[#2A2724]">
+                        <span className="text-[#6B665F]">25% Deposit Paid:</span>
+                        <span className="font-bold text-[#385648] dark:text-[#5E8C75]">${b.depositAmount} USD</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-[#F0EAE1]">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#F0EAE1] dark:border-[#2A2724]">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => window.print()}
+                        className="text-xs font-semibold text-[#6B665F] hover:text-[#1C1A18] dark:hover:text-white flex items-center gap-1.5 min-h-[36px]"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Print Voucher</span>
+                      </button>
+
+                      {b.status !== 'cancelled' && b.status !== 'completed' && (
+                        <button
+                          onClick={() => setCancelModalBookingId(b.id)}
+                          className="text-xs text-red-600 hover:underline"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+
                     <button
-                      onClick={() => window.print()}
-                      className="text-xs font-semibold text-[#6B665F] hover:text-[#1C1A18] flex items-center gap-1.5"
-                    >
-                      <Printer className="w-3.5 h-3.5" />
-                      <span>Print Voucher</span>
-                    </button>
-                    <button
-                      onClick={() => setSelectedChatArtist({ id: b.artistId, name: b.artistName, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80' })}
-                      className="btn-secondary !py-1.5 !px-3.5 !text-xs"
+                      onClick={() => setSelectedChatArtist({ id: b.artistId, name: b.artistName, avatar: b.artistAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80' })}
+                      className="btn-secondary !py-1.5 !px-3.5 !text-xs min-h-[36px]"
                     >
                       Message Artist
                     </button>
@@ -173,7 +210,9 @@ export const CustomerDashboardPage: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {savedArtists.map((artist) => (
-                <ArtistCard key={artist.id} artist={artist} />
+                <div key={artist.id} className="relative">
+                  <ArtistCard artist={artist} />
+                </div>
               ))}
             </div>
           )}
@@ -186,7 +225,9 @@ export const CustomerDashboardPage: React.FC = () => {
           <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
             Direct Artisan Conversations
           </h3>
-          <div className="p-4 rounded-xl border border-[#E8E2D9] dark:border-[#2A2724] flex items-center justify-between">
+          <p className="text-xs text-[#6B665F]">Connect directly with your booked or shortlisted mehndi artists.</p>
+          
+          <div className="p-4 rounded-xl border border-[#E8E2D9] dark:border-[#2A2724] flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
@@ -195,12 +236,12 @@ export const CustomerDashboardPage: React.FC = () => {
               />
               <div>
                 <p className="text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">Ayesha Noor Khan</p>
-                <p className="text-[11px] text-[#6B665F]">"I would be delighted to work with you on your bridal henna..."</p>
+                <p className="text-[11px] text-[#6B665F] truncate max-w-xs">"I have received your booking and inspiration photos!"</p>
               </div>
             </div>
             <button
               onClick={() => setSelectedChatArtist({ id: 'artist-ayesha-khan', name: 'Ayesha Noor Khan', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80' })}
-              className="btn-primary !py-1.5 !px-3.5 !text-xs"
+              className="btn-primary !py-2 !px-4 !text-xs min-h-[40px]"
             >
               Open Thread
             </button>
@@ -210,24 +251,76 @@ export const CustomerDashboardPage: React.FC = () => {
 
       {/* TAB 4: PROFILE */}
       {activeTab === 'profile' && (
-        <div className="editorial-card rounded-2xl p-6 sm:p-8 max-w-xl space-y-4">
+        <div className="editorial-card rounded-2xl p-6 sm:p-8 max-w-xl space-y-6">
           <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
             Bridal Preferences & Address
           </h3>
-          <div className="space-y-3 text-xs">
+
+          {profileSavedToast && (
+            <div className="p-3 rounded-xl bg-[#EEF4F0] border border-[#C8DBD0] text-[#385648] text-xs flex items-center gap-2">
+              <Check className="w-4 h-4" />
+              <span>Profile details updated successfully.</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
             <div className="space-y-1">
-              <label className="font-bold uppercase tracking-wider block">Full Name</label>
-              <input type="text" defaultValue={user?.name || 'Suhana Patel'} className="w-full px-4 py-2 rounded-lg border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]" />
+              <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Full Name</label>
+              <input
+                type="text"
+                value={profileName}
+                onChange={(e) => setProfileName(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] dark:border-[#2A2724] bg-[#FAF8F5] dark:bg-[#141312] text-[#1C1A18] dark:text-[#F7F5F0] focus:outline-none focus:border-[#1C1A18]"
+              />
             </div>
             <div className="space-y-1">
-              <label className="font-bold uppercase tracking-wider block">Email Address</label>
-              <input type="email" defaultValue={user?.email || 'suhana.patel@example.com'} className="w-full px-4 py-2 rounded-lg border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]" />
+              <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Email Address</label>
+              <input
+                type="email"
+                value={profileEmail}
+                onChange={(e) => setProfileEmail(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] dark:border-[#2A2724] bg-[#FAF8F5] dark:bg-[#141312] text-[#1C1A18] dark:text-[#F7F5F0] focus:outline-none focus:border-[#1C1A18]"
+              />
             </div>
             <div className="space-y-1">
-              <label className="font-bold uppercase tracking-wider block">Wedding Destination</label>
-              <input type="text" defaultValue="Dubai, UAE" className="w-full px-4 py-2 rounded-lg border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]" />
+              <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Wedding Destination</label>
+              <input
+                type="text"
+                value={profileLocation}
+                onChange={(e) => setProfileLocation(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D9] dark:border-[#2A2724] bg-[#FAF8F5] dark:bg-[#141312] text-[#1C1A18] dark:text-[#F7F5F0] focus:outline-none focus:border-[#1C1A18]"
+              />
             </div>
-            <button type="button" className="btn-primary !py-2 !px-6 pt-2">Save Profile Updates</button>
+            <button type="submit" className="btn-primary !py-2.5 !px-6 min-h-[44px]">
+              Save Profile Updates
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Cancel Confirmation Modal */}
+      {cancelModalBookingId && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="w-full max-w-sm bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] rounded-2xl p-6 text-center space-y-4">
+            <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
+            <h4 className="font-serif-editorial text-xl font-bold">Cancel Bridal Appointment?</h4>
+            <p className="text-xs text-[#6B665F] leading-relaxed">
+              Are you sure you want to cancel this booking? Escrow policy allows rescheduling up to 30 days prior.
+            </p>
+            <div className="flex justify-center gap-3 pt-2">
+              <button
+                onClick={() => setCancelModalBookingId(null)}
+                className="btn-secondary !py-2 !px-4 text-xs"
+              >
+                Keep Booking
+              </button>
+              <button
+                onClick={() => handleConfirmCancelBooking(cancelModalBookingId)}
+                className="px-4 py-2 rounded-full bg-red-600 text-white text-xs font-semibold hover:bg-red-700"
+              >
+                Confirm Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

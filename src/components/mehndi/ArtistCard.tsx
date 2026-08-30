@@ -49,14 +49,14 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({ artist }) => {
             )}
           </div>
 
-          {/* Discreet Favorite Button (Top Right) */}
+          {/* Discreet Favorite Button (Top Right, touch-friendly 44x44) */}
           <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               toggleFavorite(artist.id);
             }}
-            className="absolute top-3.5 right-3.5 z-10 w-8 h-8 rounded-full bg-white/90 dark:bg-black/70 backdrop-blur-sm border border-[#E8E2D9] dark:border-white/10 flex items-center justify-center text-[#6B665F] hover:text-[#8E5A3C] transition-colors shadow-xs"
+            className="absolute top-3.5 right-3.5 z-10 w-9 h-9 rounded-full bg-white/90 dark:bg-black/70 backdrop-blur-sm border border-[#E8E2D9] dark:border-white/10 flex items-center justify-center text-[#6B665F] hover:text-[#8E5A3C] transition-colors shadow-xs active:scale-95"
             aria-label={favorited ? 'Remove from wishlist' : 'Save to wishlist'}
           >
             <Heart
@@ -102,7 +102,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({ artist }) => {
             <div className="flex items-center gap-1 text-xs font-semibold text-[#1C1A18] dark:text-[#F7F5F0] shrink-0">
               <Star className="w-3.5 h-3.5 fill-[#1C1A18] dark:fill-[#F7F5F0] text-[#1C1A18] dark:text-[#F7F5F0]" />
               <span>{artist.rating.toFixed(2)}</span>
-              <span className="text-[11px] text-[#9E988F] font-normal">({artist.reviewCount})</span>
+              <span className="text-[11px] text-[#6B665F] dark:text-[#A8A298] font-normal">({artist.reviewCount})</span>
             </div>
           </div>
 
@@ -128,24 +128,24 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({ artist }) => {
       {/* Pricing & Actions Footer */}
       <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-[#F0EAE1] dark:border-[#23211E] flex items-center justify-between gap-3">
         <div>
-          <span className="text-[10px] uppercase tracking-widest text-[#9E988F] block font-semibold">
+          <span className="text-[10px] uppercase tracking-widest text-[#6B665F] dark:text-[#A8A298] block font-semibold">
             Bridal Session
           </span>
           <span className="font-serif-editorial text-lg font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-            ${artist.startingPrice} <span className="font-sans text-[11px] font-normal text-[#6B665F]">starting</span>
+            ${artist.startingPrice} <span className="font-sans text-[11px] font-normal text-[#6B665F] dark:text-[#A8A298]">starting</span>
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <Link
             to={`/artists/${artist.id}`}
-            className="text-xs font-semibold text-[#1C1A18] dark:text-[#F7F5F0] hover:text-[#8E5A3C] transition-colors py-2 px-2"
+            className="text-xs font-semibold text-[#1C1A18] dark:text-[#F7F5F0] hover:text-[#8E5A3C] transition-colors py-2 px-2.5 min-h-[40px] flex items-center"
           >
             Portfolio
           </Link>
           <button
             onClick={handleInstantBook}
-            className="btn-primary !py-2 !px-4 !text-[11px]"
+            className="btn-primary !py-2 !px-4 !text-[11px] min-h-[40px]"
           >
             <span>Reserve</span>
             <ArrowUpRight className="w-3.5 h-3.5" />

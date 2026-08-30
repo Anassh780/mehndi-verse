@@ -12,7 +12,8 @@ import {
   Sparkles, 
   Upload, 
   Clock, 
-  Eye
+  Eye,
+  CheckCircle2
 } from 'lucide-react';
 import { useMehndiAuth } from '@/context/MehndiAuthContext';
 import { bookingStorage } from '@/services/bookingStorage';
@@ -21,7 +22,7 @@ import { Booking, PortfolioItem } from '@/types/mehndi';
 
 export const ArtistDashboardPage: React.FC = () => {
   const { user } = useMehndiAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'bookings' | 'portfolio' | 'packages' | 'calendar'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'bookings' | 'portfolio' | 'calendar'>('overview');
   const [bookings, setBookings] = useState<Booking[]>(bookingStorage.getBookings());
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>(MOCK_ARTISTS[0].portfolio);
 
@@ -30,13 +31,21 @@ export const ArtistDashboardPage: React.FC = () => {
   const [newTitle, setNewTitle] = useState('');
   const [newCategory, setNewCategory] = useState('Bridal');
   const [newImageUrl, setNewImageUrl] = useState('');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Pro boost modal
+  // Pro boost state
   const [proModalOpen, setProModalOpen] = useState(false);
+  const [isProActive, setIsProActive] = useState(true);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const handleUpdateBookingStatus = (bookingId: string, status: Booking['status']) => {
     bookingStorage.updateBookingStatus(bookingId, status);
     setBookings(bookingStorage.getBookings());
+    showToast(`Booking status updated to ${status}.`);
   };
 
   const handleAddPortfolio = (e: React.FormEvent) => {
@@ -56,6 +65,7 @@ export const ArtistDashboardPage: React.FC = () => {
     setNewTitle('');
     setNewImageUrl('');
     setUploadModalOpen(false);
+    showToast('Artwork published to portfolio.');
   };
 
   const totalRevenue = bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
@@ -63,42 +73,58 @@ export const ArtistDashboardPage: React.FC = () => {
   const confirmedCount = bookings.filter(b => b.status === 'confirmed').length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
       
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-20 right-4 z-50 p-4 rounded-xl bg-[#1C1A18] text-white text-xs font-semibold shadow-2xl flex items-center gap-2 animate-in slide-in-from-top-2">
+          <CheckCircle2 className="w-4 h-4 text-[#5E8C75]" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Studio Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-[#E8E2D9] dark:border-[#2A2724]">
         <div className="space-y-1">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8E5A3C] block">
             Artist Studio Command
           </span>
-          <h1 className="font-serif-editorial text-3xl sm:text-4xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
-            Welcome back, {user?.name || 'Ayesha Noor Khan'}
-          </h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="font-serif-editorial text-2xl sm:text-4xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+              Welcome back, {user?.name || 'Ayesha Noor Khan'}
+            </h1>
+            {isProActive && (
+              <span className="badge-status">
+                <Sparkles className="w-3 h-3 text-[#8E5A3C]" />
+                <span>VIP Pro Active</span>
+              </span>
+            )}
+          </div>
           <p className="text-xs text-[#6B665F] dark:text-[#A8A298]">
             Dubai Atelier · 100% Certified Botanical Partner
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full md:w-auto">
           <button
             onClick={() => setProModalOpen(true)}
-            className="btn-secondary !py-2 !px-4 !text-xs flex items-center gap-1.5"
+            className="btn-secondary !py-2 !px-4 !text-xs flex-1 sm:flex-initial justify-center min-h-[44px]"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#8E5A3C]" />
-            <span>VIP Pro Boost</span>
+            <span>VIP Pro</span>
           </button>
           <button
             onClick={() => setUploadModalOpen(true)}
-            className="btn-primary !py-2 !px-4 !text-xs flex items-center gap-1.5"
+            className="btn-primary !py-2 !px-4 !text-xs flex-1 sm:flex-initial justify-center min-h-[44px]"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add Portfolio Work</span>
+            <span>Upload Work</span>
           </button>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center gap-8 overflow-x-auto scrollbar-none">
+      {/* Tabs (Horizontal scroll on mobile) */}
+      <div className="border-b border-[#E8E2D9] dark:border-[#2A2724] flex items-center gap-6 sm:gap-8 overflow-x-auto scrollbar-none snap-x">
         {[
           { id: 'overview', label: 'Studio Overview' },
           { id: 'bookings', label: `Bookings (${bookings.length})` },
@@ -108,9 +134,9 @@ export const ArtistDashboardPage: React.FC = () => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`py-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap relative transition-colors ${
+            className={`py-3.5 sm:py-4 text-xs font-semibold uppercase tracking-wider whitespace-nowrap relative transition-colors snap-start min-h-[44px] ${
               activeTab === tab.id
-                ? 'text-[#1C1A18] dark:text-[#F7F5F0]'
+                ? 'text-[#1C1A18] dark:text-[#F7F5F0] font-bold'
                 : 'text-[#6B665F] dark:text-[#A8A298] hover:text-[#1C1A18]'
             }`}
           >
@@ -124,18 +150,18 @@ export const ArtistDashboardPage: React.FC = () => {
 
       {/* TAB 1: OVERVIEW */}
       {activeTab === 'overview' && (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           
           {/* 4 Metric Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               { label: 'Total Commissions', value: `$${totalRevenue.toLocaleString()}`, sub: 'Escrow Protected' },
               { label: 'Pending Requests', value: pendingCount.toString(), sub: 'Requires Review' },
               { label: 'Confirmed Events', value: confirmedCount.toString(), sub: 'Upcoming Sessions' },
               { label: 'Bridal Satisfaction', value: '4.98 ★', sub: 'From 48 Reviews' },
             ].map((stat, i) => (
-              <div key={i} className="editorial-card rounded-2xl p-6 space-y-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#9E988F] block">
+              <div key={i} className="editorial-card rounded-2xl p-5 sm:p-6 space-y-1">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E5A3C] block">
                   {stat.label}
                 </span>
                 <p className="font-serif-editorial text-3xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
@@ -147,13 +173,13 @@ export const ArtistDashboardPage: React.FC = () => {
           </div>
 
           {/* Recent Inquiries & Bookings */}
-          <div className="editorial-card rounded-2xl p-6 sm:p-8 space-y-6">
+          <div className="editorial-card rounded-2xl p-5 sm:p-8 space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
                 Recent Bridal Inquiries
               </h3>
               <button onClick={() => setActiveTab('bookings')} className="text-xs font-semibold text-[#8E5A3C] hover:underline">
-                View All →
+                View All ({bookings.length}) →
               </button>
             </div>
 
@@ -166,29 +192,29 @@ export const ArtistDashboardPage: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">{b.customerName}</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-[#F4EFEB] text-[#6B665F]">
+                      <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-[#F4EFEB] dark:bg-[#23211E] text-[#6B665F] dark:text-[#A8A298]">
                         {b.status}
                       </span>
                     </div>
-                    <p className="text-[11px] text-[#6B665F] mt-0.5">
+                    <p className="text-[11px] text-[#6B665F] dark:text-[#A8A298] mt-0.5">
                       {b.eventType} · {b.eventDate} ({b.eventTime})
                     </p>
                     <p className="text-[11px] text-[#9E988F]">{b.venueAddress}</p>
                   </div>
 
-                  <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                  <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
                     <span className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">${b.totalAmount}</span>
                     {b.status === 'pending' && (
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => handleUpdateBookingStatus(b.id, 'confirmed')}
-                          className="px-3 py-1.5 rounded-full bg-[#385648] text-white text-[11px] font-bold"
+                          className="px-3 py-1.5 rounded-full bg-[#385648] text-white text-[11px] font-bold hover:bg-[#2F483C]"
                         >
                           Accept
                         </button>
                         <button
                           onClick={() => handleUpdateBookingStatus(b.id, 'cancelled')}
-                          className="px-3 py-1.5 rounded-full border border-red-300 text-red-600 text-[11px] font-bold"
+                          className="px-3 py-1.5 rounded-full border border-red-300 text-red-600 text-[11px] font-bold hover:bg-red-50"
                         >
                           Decline
                         </button>
@@ -205,7 +231,7 @@ export const ArtistDashboardPage: React.FC = () => {
 
       {/* TAB 2: BOOKINGS LIST */}
       {activeTab === 'bookings' && (
-        <div className="editorial-card rounded-2xl p-6 sm:p-8 space-y-6">
+        <div className="editorial-card rounded-2xl p-5 sm:p-8 space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
               All Managed Bookings
@@ -221,20 +247,20 @@ export const ArtistDashboardPage: React.FC = () => {
               >
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#9E988F] block">Voucher #{b.bookingNumber || b.id}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#8E5A3C] block">Voucher #{b.bookingNumber || b.id}</span>
                     <p className="font-bold text-sm text-[#1C1A18] dark:text-[#F7F5F0]">{b.customerName}</p>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                    b.status === 'confirmed' ? 'bg-[#EEF4F0] text-[#385648]' : b.status === 'pending' ? 'bg-amber-100 text-amber-900' : 'bg-gray-100 text-gray-700'
+                    b.status === 'confirmed' ? 'bg-[#EEF4F0] text-[#385648] border border-[#C8DBD0]' : b.status === 'pending' ? 'bg-amber-100 text-amber-900' : 'bg-gray-100 text-gray-700'
                   }`}>
                     {b.status}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[#6B665F] pt-2 border-t border-[#F0EAE1]">
-                  <div>Date: <strong className="text-[#1C1A18]">{b.eventDate}</strong></div>
-                  <div>Phone: <strong className="text-[#1C1A18]">{b.customerPhone}</strong></div>
-                  <div>Deposit: <strong className="text-[#385648]">${b.depositAmount} Paid</strong></div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[#6B665F] dark:text-[#A8A298] pt-2 border-t border-[#F0EAE1] dark:border-[#2A2724]">
+                  <div>Date: <strong className="text-[#1C1A18] dark:text-[#F7F5F0]">{b.eventDate}</strong></div>
+                  <div>Phone: <strong className="text-[#1C1A18] dark:text-[#F7F5F0]">{b.customerPhone}</strong></div>
+                  <div>Deposit: <strong className="text-[#385648] dark:text-[#5E8C75]">${b.depositAmount} Paid</strong></div>
                 </div>
 
                 <div className="flex justify-end gap-2 pt-2">
@@ -276,7 +302,7 @@ export const ArtistDashboardPage: React.FC = () => {
             <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
               Studio Portfolio
             </h3>
-            <button onClick={() => setUploadModalOpen(true)} className="btn-primary !py-2 !px-4 !text-xs">
+            <button onClick={() => setUploadModalOpen(true)} className="btn-primary !py-2 !px-4 !text-xs min-h-[44px]">
               <Plus className="w-3.5 h-3.5" />
               <span>Upload Work</span>
             </button>
@@ -298,14 +324,14 @@ export const ArtistDashboardPage: React.FC = () => {
 
       {/* TAB 4: CALENDAR */}
       {activeTab === 'calendar' && (
-        <div className="editorial-card rounded-2xl p-8 space-y-4">
+        <div className="editorial-card rounded-2xl p-6 sm:p-8 space-y-4">
           <h3 className="font-serif-editorial text-xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
             Ceremony Availability Blocker
           </h3>
-          <p className="text-xs text-[#6B665F]">Manage open slots for upcoming destination wedding seasons.</p>
-          <div className="p-6 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] text-xs space-y-2">
-            <p className="font-bold">Next Available Bridal Window:</p>
-            <p className="text-[#385648] font-semibold">2026/2027 Autumn & Winter Seasons Active</p>
+          <p className="text-xs text-[#6B665F] dark:text-[#A8A298]">Manage open slots for upcoming destination wedding seasons.</p>
+          <div className="p-6 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] text-xs space-y-2">
+            <p className="font-bold text-[#1C1A18] dark:text-[#F7F5F0]">Next Available Bridal Window:</p>
+            <p className="text-[#385648] dark:text-[#5E8C75] font-semibold">2026/2027 Autumn & Winter Seasons Active</p>
           </div>
         </div>
       )}
@@ -313,29 +339,29 @@ export const ArtistDashboardPage: React.FC = () => {
       {/* Upload Artwork Modal */}
       {uploadModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] rounded-2xl p-6 space-y-4">
-            <div className="flex justify-between items-center pb-2 border-b border-[#E8E2D9]">
-              <h4 className="font-serif-editorial font-bold text-lg">Add Portfolio Artwork</h4>
-              <button onClick={() => setUploadModalOpen(false)}><X className="w-4 h-4" /></button>
+          <div className="w-full max-w-md bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] rounded-2xl p-6 space-y-4 shadow-2xl">
+            <div className="flex justify-between items-center pb-2 border-b border-[#E8E2D9] dark:border-[#2A2724]">
+              <h4 className="font-serif-editorial font-bold text-lg text-[#1C1A18] dark:text-[#F7F5F0]">Add Portfolio Artwork</h4>
+              <button onClick={() => setUploadModalOpen(false)} className="p-1 text-[#6B665F]"><X className="w-4 h-4" /></button>
             </div>
             <form onSubmit={handleAddPortfolio} className="space-y-3 text-xs">
               <div className="space-y-1">
-                <label className="font-bold uppercase tracking-wider block">Title</label>
+                <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Title</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Royal Rajasthani Cuff"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-[#E8E2D9] dark:border-[#2A2724] bg-[#FAF8F5] dark:bg-[#141312]"
                 />
               </div>
               <div className="space-y-1">
-                <label className="font-bold uppercase tracking-wider block">Category</label>
+                <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Category</label>
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-[#E8E2D9] dark:border-[#2A2724] bg-[#FAF8F5] dark:bg-[#141312]"
                 >
                   <option value="Bridal">Bridal</option>
                   <option value="Arabic">Arabic</option>
@@ -344,19 +370,19 @@ export const ArtistDashboardPage: React.FC = () => {
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="font-bold uppercase tracking-wider block">Image URL</label>
+                <label className="font-bold uppercase tracking-wider block text-[#1C1A18] dark:text-[#F7F5F0]">Image URL</label>
                 <input
                   type="url"
                   required
                   placeholder="https://images.unsplash.com/..."
                   value={newImageUrl}
                   onChange={(e) => setNewImageUrl(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-[#E8E2D9] bg-[#FAF8F5] dark:bg-[#141312]"
+                  className="w-full px-3.5 py-2.5 rounded-lg border border-[#E8E2D9] dark:border-[#2A2724] bg-[#FAF8F5] dark:bg-[#141312]"
                 />
               </div>
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-2 pt-3">
                 <button type="button" onClick={() => setUploadModalOpen(false)} className="btn-secondary !py-2 !px-4">Cancel</button>
-                <button type="submit" className="btn-primary !py-2 !px-4">Publish Artwork</button>
+                <button type="submit" className="btn-primary !py-2 !px-5">Publish Artwork</button>
               </div>
             </form>
           </div>
@@ -366,18 +392,27 @@ export const ArtistDashboardPage: React.FC = () => {
       {/* Pro Boost Modal */}
       {proModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] rounded-2xl p-6 text-center space-y-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#1C1A18] border border-[#E8E2D9] dark:border-[#2A2724] rounded-2xl p-6 text-center space-y-4 shadow-2xl">
             <Sparkles className="w-8 h-8 text-[#8E5A3C] mx-auto" />
-            <h4 className="font-serif-editorial text-2xl font-bold">Atelier VIP Pro Boost</h4>
-            <p className="text-xs text-[#6B665F] leading-relaxed">
+            <h4 className="font-serif-editorial text-2xl font-bold text-[#1C1A18] dark:text-[#F7F5F0]">Atelier VIP Pro Boost</h4>
+            <p className="text-xs text-[#6B665F] dark:text-[#A8A298] leading-relaxed">
               Gain 3x visibility in Dubai and London bride search results, certified gold atelier badge, and zero commission on repeat clientele.
             </p>
-            <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border text-xs font-bold">
-              $49 / Month · Cancel Anytime
+            <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#141312] border border-[#E8E2D9] dark:border-[#2A2724] text-xs font-bold text-[#1C1A18] dark:text-[#F7F5F0]">
+              $49 / Month · Active Membership
             </div>
             <div className="flex justify-center gap-3">
               <button onClick={() => setProModalOpen(false)} className="btn-secondary !py-2 !px-4">Close</button>
-              <button onClick={() => setProModalOpen(false)} className="btn-primary !py-2 !px-4">Activate VIP Boost</button>
+              <button
+                onClick={() => {
+                  setIsProActive(true);
+                  setProModalOpen(false);
+                  showToast('VIP Pro Boost is active.');
+                }}
+                className="btn-primary !py-2 !px-4"
+              >
+                Renew VIP Boost
+              </button>
             </div>
           </div>
         </div>

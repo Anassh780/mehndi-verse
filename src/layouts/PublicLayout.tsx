@@ -9,20 +9,20 @@ export const PublicLayout: React.FC = () => {
   const [aiModalOpen, setAiModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FDFBF7] dark:bg-[#07100D] text-[#1A2421] dark:text-[#F8F5EE] antialiased selection:bg-[#C59B27]/30 selection:text-[#064E3B]">
+    <div className="min-h-screen flex flex-col bg-[#FAF8F5] dark:bg-[#141312] text-[#1C1A18] dark:text-[#F7F5F0] antialiased selection:bg-[#8E5A3C]/20 selection:text-[#8E5A3C]">
       
-      {/* Top Navigation */}
+      {/* Top Editorial Navigation */}
       <Navbar onOpenAIQuiz={() => setAiModalOpen(true)} />
 
-      {/* Main Page Outlet */}
-      <main className="flex-1">
+      {/* Main Page Outlet with Mobile Bottom Nav Clearance */}
+      <main className="flex-1 pb-16 md:pb-0">
         <Outlet />
       </main>
 
-      {/* Footer */}
+      {/* Editorial Footer */}
       <Footer />
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation (Visible on Android & Mobile) */}
       <MobileBottomNav onOpenAIQuiz={() => setAiModalOpen(true)} />
 
       {/* Global AI Style Quiz Modal */}
